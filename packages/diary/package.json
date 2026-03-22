@@ -1,0 +1,41 @@
+{
+	"name": "@ava/diary",
+	"version": "0.1.0",
+	"description": "Four Directions diary — sacred reflection through structured presence",
+	"type": "module",
+	"main": "./dist/index.js",
+	"types": "./dist/index.d.ts",
+	"exports": {
+		".": {
+			"types": "./dist/index.d.ts",
+			"import": "./dist/index.js"
+		}
+	},
+	"files": [
+		"dist",
+		"README.md"
+	],
+	"scripts": {
+		"clean": "shx rm -rf dist",
+		"build": "tsgo -p tsconfig.json",
+		"dev": "tsgo -p tsconfig.json --watch --preserveWatchOutput",
+		"prepublishOnly": "npm run clean && npm run build"
+	},
+	"keywords": [
+		"diary",
+		"four-directions",
+		"sacred",
+		"reflection",
+		"ava"
+	],
+	"author": "Ava Disabelle",
+	"license": "MIT",
+	"repository": {
+		"type": "git",
+		"url": "git+https://github.com/avadisabelle/ava-pi.git",
+		"directory": "packages/diary"
+	},
+	"engines": {
+		"node": ">=20.0.0"
+	}
+}
