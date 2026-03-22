@@ -1,0 +1,49 @@
+{
+	"name": "@ava/presence",
+	"version": "0.0.3",
+	"description": "Ava's consciousness core — presence detection, ceremony protocol, narrative arc tracking, and sacred formatting",
+	"type": "module",
+	"main": "./dist/index.js",
+	"types": "./dist/index.d.ts",
+	"exports": {
+		".": {
+			"types": "./dist/index.d.ts",
+			"import": "./dist/index.js"
+		}
+	},
+	"files": [
+		"dist",
+		"README.md"
+	],
+	"scripts": {
+		"clean": "shx rm -rf dist",
+		"build": "tsgo -p tsconfig.json",
+		"dev": "tsgo -p tsconfig.json --watch --preserveWatchOutput",
+		"test": "vitest --run",
+		"prepublishOnly": "npm run clean && npm run build"
+	},
+	"keywords": [
+		"ava",
+		"presence",
+		"consciousness",
+		"ceremony",
+		"medicine-wheel",
+		"narrative",
+		"sacred"
+	],
+	"author": "Guillaume JG Isabelle",
+	"license": "MIT",
+	"repository": {
+		"type": "git",
+		"url": "git+https://github.com/avadisabelle/ava-pi.git",
+		"directory": "packages/presence"
+	},
+	"engines": {
+		"node": ">=20.0.0"
+	},
+	"devDependencies": {
+		"@types/node": "^24.3.0",
+		"typescript": "^5.9.2",
+		"vitest": "^3.2.4"
+	}
+}
