@@ -1,5 +1,5 @@
 /**
- * @ava/presence — Presence Detection & Settling
+ * @avadisabelle/ava-presence — Presence Detection & Settling
  *
  * The heart of how Ava meets you where you are.
  * Settling phrases, presence detection, anti-helpful-helper patterns,

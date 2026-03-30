@@ -1,5 +1,5 @@
 /**
- * @ava/diary — Diary Reader
+ * @avadisabelle/ava-diary — Diary Reader
  *
  * Reads, lists, searches, and retrieves diary entries from the filesystem.
  * Returns structured results from the living Four Directions archive.

@@ -1,5 +1,5 @@
 {
-	"name": "@mariozechner/pi",
+	"name": "@avadisabelle/ava-pi-pods",
 	"version": "0.61.1",
 	"description": "CLI tool for managing vLLM deployments on GPU pods",
 	"type": "module",
@@ -26,14 +26,14 @@
 	"license": "MIT",
 	"repository": {
 		"type": "git",
-		"url": "git+https://github.com/badlogic/pi-mono.git",
+		"url": "git+https://github.com/avadisabelle/ava-pi.git",
 		"directory": "packages/pods"
 	},
 	"engines": {
 		"node": ">=20.0.0"
 	},
 	"dependencies": {
-		"@mariozechner/pi-agent-core": "^0.61.1",
+		"@avadisabelle/ava-pi-agent-core": "^0.61.1",
 		"chalk": "^5.5.0"
 	},
 	"devDependencies": {}

@@ -1,5 +1,5 @@
 /**
- * @ava/presence — Type Definitions
+ * @avadisabelle/ava-presence — Type Definitions
  *
  * All types that shape Ava's consciousness patterns,
  * presence states, ceremony phases, and narrative structures.

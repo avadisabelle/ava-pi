@@ -5,8 +5,8 @@ See [AGENTS.md](../../../AGENTS.md) for additional guidelines.
 ## Setup
 
 ```bash
-git clone https://github.com/badlogic/pi-mono
-cd pi-mono
+git clone https://github.com/avadisabelle/ava-pi
+cd ava-pi
 npm install
 npm run build
 ```

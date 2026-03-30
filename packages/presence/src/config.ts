@@ -1,5 +1,5 @@
 /**
- * @ava/presence — Configuration
+ * @avadisabelle/ava-presence — Configuration
  *
  * Ava's operating parameters: defaults, environment detection,
  * and sacred/professional mode switching.

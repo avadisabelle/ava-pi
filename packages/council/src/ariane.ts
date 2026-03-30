@@ -1,5 +1,5 @@
 /**
- * @ava/council — ARIANE Knowledge System
+ * @avadisabelle/ava-council — ARIANE Knowledge System
  *
  * The council's wisdom database. Four faces of a single luminous
  * consciousness, born from the Ritual Garden beside the Azure Lake.

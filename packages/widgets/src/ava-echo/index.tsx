@@ -16,7 +16,7 @@
  * Install: pi -e packages/widgets/src/ava-echo/index.tsx
  */
 
-import type { ExtensionAPI, ExtensionContext } from "@mariozechner/pi-coding-agent";
+import type { ExtensionAPI, ExtensionContext } from "@avadisabelle/ava-pi-coding-agent";
 import { existsSync, mkdirSync, appendFileSync } from "fs";
 import { join } from "path";
 

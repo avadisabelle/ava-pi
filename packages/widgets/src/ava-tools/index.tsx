@@ -15,9 +15,9 @@
  * Install: pi -e packages/widgets/src/ava-tools/index.tsx
  */
 
-import { Type } from "@mariozechner/pi-ai";
-import type { ExtensionAPI, ExtensionContext } from "@mariozechner/pi-coding-agent";
-import { Box, Text } from "@mariozechner/pi-tui";
+import { Type } from "@avadisabelle/ava-pi-ai";
+import type { ExtensionAPI, ExtensionContext } from "@avadisabelle/ava-pi-coding-agent";
+import { Box, Text } from "@avadisabelle/ava-pi-tui";
 import { spawn } from "child_process";
 import { existsSync, readFileSync, readdirSync } from "fs";
 import { join } from "path";

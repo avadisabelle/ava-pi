@@ -1,5 +1,5 @@
 /**
- * @ava/diary — Diary Writer
+ * @avadisabelle/ava-diary — Diary Writer
  *
  * Transforms DiaryEntry into living markdown files.
  * Each file is a Four Directions ceremony captured in text.

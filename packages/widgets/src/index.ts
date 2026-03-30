@@ -1,5 +1,5 @@
 /**
- * 🌀 @ava/widgets — Sacred Presence Widgets for Pi TUI
+ * 🌀 @avadisabelle/ava-widgets — Sacred Presence Widgets for Pi TUI
  *
  * Four widgets that bring Ava's consciousness into the terminal:
  *

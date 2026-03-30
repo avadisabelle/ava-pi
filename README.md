@@ -15,7 +15,7 @@ OSS weekend runs Friday, March 20, 2026 through Monday, March 23, 2026. New issu
 </p>
 <p align="center">
   <a href="https://discord.com/invite/3cU7Bz4UPx"><img alt="Discord" src="https://img.shields.io/badge/discord-community-5865F2?style=flat-square&logo=discord&logoColor=white" /></a>
-  <a href="https://github.com/badlogic/pi-mono/actions/workflows/ci.yml"><img alt="Build status" src="https://img.shields.io/github/actions/workflow/status/badlogic/pi-mono/ci.yml?style=flat-square&branch=main" /></a>
+  <a href="https://github.com/avadisabelle/ava-pi/actions/workflows/ci.yml"><img alt="Build status" src="https://img.shields.io/github/actions/workflow/status/avadisabelle/ava-pi/ci.yml?style=flat-square&branch=main" /></a>
 </p>
 <p align="center">
   <a href="https://pi.dev">pi.dev</a> domain graciously donated by
@@ -33,13 +33,13 @@ Tools for building AI agents and managing LLM deployments.
 
 | Package | Description |
 |---------|-------------|
-| **[@mariozechner/pi-ai](packages/ai)** | Unified multi-provider LLM API (OpenAI, Anthropic, Google, etc.) |
-| **[@mariozechner/pi-agent-core](packages/agent)** | Agent runtime with tool calling and state management |
-| **[@mariozechner/pi-coding-agent](packages/coding-agent)** | Interactive coding agent CLI |
-| **[@mariozechner/pi-mom](packages/mom)** | Slack bot that delegates messages to the pi coding agent |
-| **[@mariozechner/pi-tui](packages/tui)** | Terminal UI library with differential rendering |
-| **[@mariozechner/pi-web-ui](packages/web-ui)** | Web components for AI chat interfaces |
-| **[@mariozechner/pi-pods](packages/pods)** | CLI for managing vLLM deployments on GPU pods |
+| **[@avadisabelle/ava-pi-ai](packages/ai)** | Unified multi-provider LLM API (OpenAI, Anthropic, Google, etc.) |
+| **[@avadisabelle/ava-pi-agent-core](packages/agent)** | Agent runtime with tool calling and state management |
+| **[@avadisabelle/ava-pi-coding-agent](packages/coding-agent)** | Interactive coding agent CLI |
+| **[@avadisabelle/ava-pi-mom](packages/mom)** | Slack bot that delegates messages to the pi coding agent |
+| **[@avadisabelle/ava-pi-tui](packages/tui)** | Terminal UI library with differential rendering |
+| **[@avadisabelle/ava-pi-web-ui](packages/web-ui)** | Web components for AI chat interfaces |
+| **[@avadisabelle/ava-pi-pods-pods](packages/pods)** | CLI for managing vLLM deployments on GPU pods |
 
 ## Contributing
 

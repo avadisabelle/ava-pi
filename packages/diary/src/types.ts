@@ -1,5 +1,5 @@
 /**
- * @ava/diary — Type definitions
+ * @avadisabelle/ava-diary — Type definitions
  *
  * The shapes that hold Four Directions reflection.
  * Each type honors the structure of sacred diary practice.

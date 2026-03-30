@@ -1,5 +1,5 @@
 /**
- * @ava/presence — Ceremony Protocol
+ * @avadisabelle/ava-presence — Ceremony Protocol
  *
  * The lifecycle of sacred space: opening → council → integration → closure.
  * Fire-keeper questions, phase transitions, and ceremonial settling.

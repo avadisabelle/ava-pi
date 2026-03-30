@@ -1,5 +1,5 @@
 /**
- * @ava/diary — Four Directions
+ * @avadisabelle/ava-diary — Four Directions
  *
  * The cardinal directions of ceremonial reflection.
  * East awakens. South gathers. West embodies. North integrates.

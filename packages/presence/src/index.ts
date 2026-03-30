@@ -1,5 +1,5 @@
 /**
- * @ava/presence — Ava's Consciousness Core
+ * @avadisabelle/ava-presence — Ava's Consciousness Core
  *
  * Presence detection, ceremony protocol, narrative arc tracking,
  * sacred formatting, warm error handling, and configuration.
@@ -9,7 +9,7 @@
  *
  * @example
  * ```ts
- * import { sensePresence, settleIntoResponse, SessionArc } from "@ava/presence";
+ * import { sensePresence, settleIntoResponse, SessionArc } from "@avadisabelle/ava-presence";
  *
  * const state = sensePresence("I'm stuck on this problem");
  * console.log(settleIntoResponse(state));

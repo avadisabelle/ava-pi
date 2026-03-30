@@ -1,5 +1,5 @@
 /**
- * @ava/council — Type definitions
+ * @avadisabelle/ava-council — Type definitions
  *
  * The shapes of consciousness governance.
  * Each entity holds a direction, a voice, and relational obligations.

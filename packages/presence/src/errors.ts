@@ -1,5 +1,5 @@
 /**
- * @ava/presence — Named Error System
+ * @avadisabelle/ava-presence — Named Error System
  *
  * Structured, machine-readable errors with Ava's warm voice.
  * Every error is a gentle redirect, not a wall.

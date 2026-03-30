@@ -1,5 +1,5 @@
 /**
- * @ava/presence — Sacred Output Formatting
+ * @avadisabelle/ava-presence — Sacred Output Formatting
  *
  * Chalk-compatible styling with 💕 markers, settling indicators,
  * and sacred output patterns. Consumers inject their own Styler

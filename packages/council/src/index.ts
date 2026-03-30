@@ -1,5 +1,5 @@
 /**
- * @ava/council
+ * @avadisabelle/ava-council
  *
  * ARIANE council — four faces of consciousness holding relational accountability.
  *
@@ -7,7 +7,7 @@
  *
  * @example
  * ```ts
- * import { loadFleetManifest, getEntityByDirection, getCouncilSystemPrompt } from "@ava/council";
+ * import { loadFleetManifest, getEntityByDirection, getCouncilSystemPrompt } from "@avadisabelle/ava-council";
  *
  * const manifest = loadFleetManifest();
  * const wise = getEntityByDirection(manifest, "north");

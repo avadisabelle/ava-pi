@@ -1,4 +1,4 @@
-import type { Model } from "@mariozechner/pi-ai";
+import type { Model } from "@avadisabelle/ava-pi-ai";
 import { Store } from "../store.js";
 import type { StoreConfig } from "../types.js";
 

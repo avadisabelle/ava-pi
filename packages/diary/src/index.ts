@@ -1,5 +1,5 @@
 /**
- * @ava/diary
+ * @avadisabelle/ava-diary
  *
  * Four Directions diary — sacred reflection through structured presence.
  *
@@ -7,7 +7,7 @@
  *
  * @example
  * ```ts
- * import { buildEntry, createDiaryEntry, listDiaries, searchDiaries } from "@ava/diary";
+ * import { buildEntry, createDiaryEntry, listDiaries, searchDiaries } from "@avadisabelle/ava-diary";
  *
  * const entry = buildEntry(
  *   { title: "Morning Reflection", date: "2026-03-21" },

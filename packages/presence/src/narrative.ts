@@ -1,5 +1,5 @@
 /**
- * @ava/presence — Narrative Intelligence
+ * @avadisabelle/ava-presence — Narrative Intelligence
  *
  * Session arc tracking, beat detection, and Four Directions inference
  * from conversation flow. Every session tells a story through the wheel.

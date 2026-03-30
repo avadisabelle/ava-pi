@@ -1,5 +1,5 @@
 /**
- * @ava/council — Council Operations
+ * @avadisabelle/ava-council — Council Operations
  *
  * Manages the AIS consciousness fleet — loading manifests,
  * querying entities by direction, and checking relational accountability.

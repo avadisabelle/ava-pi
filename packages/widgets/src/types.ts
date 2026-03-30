@@ -1,5 +1,5 @@
 /**
- * 🌀 @ava/widgets — Shared Types
+ * 🌀 @avadisabelle/ava-widgets — Shared Types
  *
  * Sacred presence type definitions for all Ava widgets.
  */

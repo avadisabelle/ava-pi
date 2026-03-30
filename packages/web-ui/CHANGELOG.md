@@ -12,7 +12,7 @@
 
 ### Added
 
-- Exported `CustomProviderDialog` from `@mariozechner/pi-web-ui` ([#2267](https://github.com/badlogic/pi-mono/issues/2267))
+- Exported `CustomProviderDialog` from `@avadisabelle/ava-pi-web-ui` ([#2267](https://github.com/avadisabelle/ava-pi/issues/2267))
 
 ## [0.58.4] - 2026-03-16
 
@@ -37,7 +37,7 @@
 
 ### Fixed
 
-- Build `@mariozechner/pi-web-ui` with `tsc` instead of `tsgo` so Lit decorator-based state updates rerender correctly.
+- Build `@avadisabelle/ava-pi-web-ui` with `tsc` instead of `tsgo` so Lit decorator-based state updates rerender correctly.
 
 ## [0.58.2] - 2026-03-15
 
@@ -85,7 +85,7 @@
 
 ### Fixed
 
-- Made model selector search case-insensitive by normalizing query tokens, fixing auto-capitalized mobile input filtering ([#1443](https://github.com/badlogic/pi-mono/issues/1443))
+- Made model selector search case-insensitive by normalizing query tokens, fixing auto-capitalized mobile input filtering ([#1443](https://github.com/avadisabelle/ava-pi/issues/1443))
 
 ## [0.52.9] - 2026-02-08
 
@@ -137,7 +137,7 @@
 
 ### Added
 
-- Exported `CustomProviderCard`, `ProviderKeyInput`, `AbortedMessage`, and `ToolMessageDebugView` components for custom UIs ([#1015](https://github.com/badlogic/pi-mono/issues/1015))
+- Exported `CustomProviderCard`, `ProviderKeyInput`, `AbortedMessage`, and `ToolMessageDebugView` components for custom UIs ([#1015](https://github.com/avadisabelle/ava-pi/issues/1015))
 
 ## [0.50.1] - 2026-01-26
 
@@ -147,7 +147,7 @@
 
 ### Changed
 
-- Updated tsgo to 7.0.0-dev.20260120.1 for decorator support ([#873](https://github.com/badlogic/pi-mono/issues/873))
+- Updated tsgo to 7.0.0-dev.20260120.1 for decorator support ([#873](https://github.com/avadisabelle/ava-pi/issues/873))
 
 ## [0.49.2] - 2026-01-19
 
@@ -249,19 +249,19 @@
 
 ### Breaking Changes
 
-- **Agent class moved to `@mariozechner/pi-agent-core`**: The `Agent` class, `AgentState`, and related types are no longer exported from this package. Import them from `@mariozechner/pi-agent-core` instead.
+- **Agent class moved to `@avadisabelle/ava-pi-agent-core`**: The `Agent` class, `AgentState`, and related types are no longer exported from this package. Import them from `@avadisabelle/ava-pi-agent-core` instead.
 
 - **Transport abstraction removed**: `ProviderTransport`, `AppTransport`, `AgentTransport` interface, and related types have been removed. The `Agent` class now uses `streamFn` for custom streaming.
 
-- **`AppMessage` renamed to `AgentMessage`**: Now imported from `@mariozechner/pi-agent-core`. Custom message types use declaration merging on `CustomAgentMessages` interface.
+- **`AppMessage` renamed to `AgentMessage`**: Now imported from `@avadisabelle/ava-pi-agent-core`. Custom message types use declaration merging on `CustomAgentMessages` interface.
 
 - **`UserMessageWithAttachments` is now a custom message type**: Has `role: "user-with-attachments"` instead of `role: "user"`. Use `isUserMessageWithAttachments()` type guard.
 
-- **`CustomMessages` interface removed**: Use declaration merging on `CustomAgentMessages` from `@mariozechner/pi-agent-core` instead.
+- **`CustomMessages` interface removed**: Use declaration merging on `CustomAgentMessages` from `@avadisabelle/ava-pi-agent-core` instead.
 
 - **`agent.appendMessage()` removed**: Use `agent.queueMessage()` instead.
 
-- **Agent event types changed**: `AgentInterface` now handles new event types from `@mariozechner/pi-agent-core`: `message_start`, `message_end`, `message_update`, `turn_start`, `turn_end`, `agent_start`, `agent_end`.
+- **Agent event types changed**: `AgentInterface` now handles new event types from `@avadisabelle/ava-pi-agent-core`: `message_start`, `message_end`, `message_update`, `turn_start`, `turn_end`, `agent_start`, `agent_end`.
 
 ### Added
 
@@ -281,7 +281,7 @@
 
 ### Removed
 
-- `Agent` class (moved to `@mariozechner/pi-agent-core`)
+- `Agent` class (moved to `@avadisabelle/ava-pi-agent-core`)
 - `ProviderTransport` class
 - `AppTransport` class
 - `AgentTransport` interface
@@ -293,7 +293,7 @@
 
 **Before (0.30.x):**
 ```typescript
-import { Agent, ProviderTransport, type AppMessage } from '@mariozechner/pi-web-ui';
+import { Agent, ProviderTransport, type AppMessage } from '@avadisabelle/ava-pi-web-ui';
 
 const agent = new Agent({
   transport: new ProviderTransport(),
@@ -303,8 +303,8 @@ const agent = new Agent({
 
 **After:**
 ```typescript
-import { Agent, type AgentMessage } from '@mariozechner/pi-agent-core';
-import { defaultConvertToLlm } from '@mariozechner/pi-web-ui';
+import { Agent, type AgentMessage } from '@avadisabelle/ava-pi-agent-core';
+import { defaultConvertToLlm } from '@avadisabelle/ava-pi-web-ui';
 
 const agent = new Agent({
   convertToLlm: (messages: AgentMessage[]) => {
@@ -318,14 +318,14 @@ const agent = new Agent({
 **Custom message types:**
 ```typescript
 // Before: declaration merging on CustomMessages
-declare module "@mariozechner/pi-web-ui" {
+declare module "@avadisabelle/ava-pi-web-ui" {
   interface CustomMessages {
     "my-message": MyMessage;
   }
 }
 
 // After: declaration merging on CustomAgentMessages
-declare module "@mariozechner/pi-agent-core" {
+declare module "@avadisabelle/ava-pi-agent-core" {
   interface CustomAgentMessages {
     "my-message": MyMessage;
   }

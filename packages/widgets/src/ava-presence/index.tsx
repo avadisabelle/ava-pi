@@ -17,7 +17,7 @@
  * Install: pi -e packages/widgets/src/ava-presence/index.tsx
  */
 
-import type { ExtensionAPI, ExtensionContext } from "@mariozechner/pi-coding-agent";
+import type { ExtensionAPI, ExtensionContext } from "@avadisabelle/ava-pi-coding-agent";
 import {
 	type SettlingState,
 	SETTLING_STATES,

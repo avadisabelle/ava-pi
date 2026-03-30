@@ -1,6 +1,6 @@
-import type { AgentMessage } from "@mariozechner/pi-agent-core";
-import type { AssistantMessage, Usage } from "@mariozechner/pi-ai";
-import { getModel } from "@mariozechner/pi-ai";
+import type { AgentMessage } from "@avadisabelle/ava-pi-agent-core";
+import type { AssistantMessage, Usage } from "@avadisabelle/ava-pi-ai";
+import { getModel } from "@avadisabelle/ava-pi-ai";
 import { readFileSync } from "fs";
 import { join } from "path";
 import { beforeEach, describe, expect, it } from "vitest";
