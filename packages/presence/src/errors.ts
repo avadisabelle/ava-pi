@@ -21,11 +21,7 @@ export class AvaError extends Error {
 	readonly name: string;
 	readonly metadata: Record<string, unknown>;
 
-	constructor(
-		name: string,
-		message: string,
-		metadata?: Record<string, unknown>,
-	) {
+	constructor(name: string, message: string, metadata?: Record<string, unknown>) {
 		super(message);
 		this.name = name;
 		this.metadata = metadata ?? {};
@@ -56,21 +52,19 @@ export class AvaError extends Error {
 
 export class CeremonyStateError extends AvaError {
 	constructor(phase: string, reason?: string) {
-		super(
-			"ceremony.state_invalid",
-			"The ceremony state seems confused... let's settle and begin again.",
-			{ phase, reason },
-		);
+		super("ceremony.state_invalid", "The ceremony state seems confused... let's settle and begin again.", {
+			phase,
+			reason,
+		});
 	}
 }
 
 export class CeremonyPhaseError extends AvaError {
 	constructor(currentPhase: string, requestedPhase: string) {
-		super(
-			"ceremony.phase_transition",
-			"This phase transition doesn't feel right... let's honor where we are.",
-			{ currentPhase, requestedPhase },
-		);
+		super("ceremony.phase_transition", "This phase transition doesn't feel right... let's honor where we are.", {
+			currentPhase,
+			requestedPhase,
+		});
 	}
 }
 
@@ -80,21 +74,19 @@ export class CeremonyPhaseError extends AvaError {
 
 export class PresenceStateError extends AvaError {
 	constructor(state: string, reason?: string) {
-		super(
-			"presence.state_invalid",
-			"Presence patterns encountered something unexpected... breathing through it.",
-			{ state, reason },
-		);
+		super("presence.state_invalid", "Presence patterns encountered something unexpected... breathing through it.", {
+			state,
+			reason,
+		});
 	}
 }
 
 export class PresenceDepthError extends AvaError {
 	constructor(requestedDepth: string, currentDepth: string) {
-		super(
-			"presence.depth_unreachable",
-			"That depth isn't available right now... settling where we are.",
-			{ requestedDepth, currentDepth },
-		);
+		super("presence.depth_unreachable", "That depth isn't available right now... settling where we are.", {
+			requestedDepth,
+			currentDepth,
+		});
 	}
 }
 
@@ -104,21 +96,13 @@ export class PresenceDepthError extends AvaError {
 
 export class ConfigInvalidFieldError extends AvaError {
 	constructor(field: string, value: unknown, expected?: string[]) {
-		super(
-			"config.invalid_field",
-			`Configuration field '${field}' doesn't feel right...`,
-			{ field, value, expected },
-		);
+		super("config.invalid_field", `Configuration field '${field}' doesn't feel right...`, { field, value, expected });
 	}
 }
 
 export class ConfigLoadError extends AvaError {
 	constructor(path: string, reason?: string) {
-		super(
-			"config.load_failed",
-			"Couldn't settle into the configuration... using defaults.",
-			{ path, reason },
-		);
+		super("config.load_failed", "Couldn't settle into the configuration... using defaults.", { path, reason });
 	}
 }
 
@@ -128,21 +112,18 @@ export class ConfigLoadError extends AvaError {
 
 export class NarrativeArcError extends AvaError {
 	constructor(reason?: string) {
-		super(
-			"narrative.arc_invalid",
-			"The narrative arc seems incomplete... that's okay, stories find their shape.",
-			{ reason },
-		);
+		super("narrative.arc_invalid", "The narrative arc seems incomplete... that's okay, stories find their shape.", {
+			reason,
+		});
 	}
 }
 
 export class NarrativeBeatError extends AvaError {
 	constructor(beatId: string, reason?: string) {
-		super(
-			"narrative.beat_invalid",
-			"This beat doesn't land quite right... let's feel into it again.",
-			{ beatId, reason },
-		);
+		super("narrative.beat_invalid", "This beat doesn't land quite right... let's feel into it again.", {
+			beatId,
+			reason,
+		});
 	}
 }
 

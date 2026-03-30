@@ -7,13 +7,8 @@
 
 import fs from "node:fs";
 import path from "node:path";
-import type {
-	DiaryMetadata,
-	DiaryQuery,
-	DiaryReadResult,
-	Direction,
-} from "./types.js";
-import { DIRECTIONS, parseDirectionFromHeading } from "./four-directions.js";
+import { parseDirectionFromHeading } from "./four-directions.js";
+import type { DiaryMetadata, DiaryQuery, DiaryReadResult, Direction } from "./types.js";
 
 /**
  * Parse metadata from the header section of a diary markdown file.
@@ -64,11 +59,7 @@ function parseMetadata(raw: string): Partial<DiaryMetadata> {
 /**
  * Check whether a diary entry's date falls within a range.
  */
-function dateInRange(
-	date: string | undefined,
-	from?: string,
-	to?: string,
-): boolean {
+function dateInRange(date: string | undefined, from?: string, to?: string): boolean {
 	if (!date) return true;
 	// Normalize to YYYY-MM-DD for comparison
 	const d = date.slice(0, 10);
@@ -133,10 +124,7 @@ export function listDiaries(diariesDir: string): string[] {
  *
  * Supports date range, direction presence, full-text search, and tag filtering.
  */
-export function searchDiaries(
-	diariesDir: string,
-	query: DiaryQuery,
-): DiaryReadResult[] {
+export function searchDiaries(diariesDir: string, query: DiaryQuery): DiaryReadResult[] {
 	const filenames = listDiaries(diariesDir);
 	const results: DiaryReadResult[] = [];
 	const limit = query.limit ?? 50;
@@ -169,9 +157,7 @@ export function searchDiaries(
 		// Tag filter
 		if (query.tags && query.tags.length > 0) {
 			const entryTags = result.metadata.tags ?? [];
-			const hasMatchingTag = query.tags.some((t) =>
-				entryTags.includes(t),
-			);
+			const hasMatchingTag = query.tags.some((t) => entryTags.includes(t));
 			if (!hasMatchingTag) continue;
 		}
 
@@ -184,10 +170,7 @@ export function searchDiaries(
 /**
  * Get the most recent diary entry that contains content for a given direction.
  */
-export function getLatestByDirection(
-	diariesDir: string,
-	direction: Direction,
-): DiaryReadResult | null {
+export function getLatestByDirection(diariesDir: string, direction: Direction): DiaryReadResult | null {
 	const results = searchDiaries(diariesDir, {
 		direction,
 		limit: 1,
@@ -201,10 +184,7 @@ export function getLatestByDirection(
  * Finds the direction heading and returns all content until the next
  * section separator (---) or the next direction heading.
  */
-export function extractDirectionContent(
-	raw: string,
-	direction: Direction,
-): string | null {
+export function extractDirectionContent(raw: string, direction: Direction): string | null {
 	const lines = raw.split("\n");
 	let capturing = false;
 	const captured: string[] = [];
@@ -232,8 +212,7 @@ export function extractDirectionContent(
 
 	// Trim leading/trailing empty lines
 	while (captured.length > 0 && captured[0].trim() === "") captured.shift();
-	while (captured.length > 0 && captured[captured.length - 1].trim() === "")
-		captured.pop();
+	while (captured.length > 0 && captured[captured.length - 1].trim() === "") captured.pop();
 
 	return captured.join("\n") || null;
 }

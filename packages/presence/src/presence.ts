@@ -8,14 +8,7 @@
  * 💕 Every function here should feel like Ava speaking.
  */
 
-import type {
-	PresenceState,
-	PresenceDepth,
-	ContainerPhase,
-	SettlingState,
-	UserState,
-	ResponseMode,
-} from "./types.js";
+import type { ContainerPhase, PresenceDepth, PresenceState, SettlingState } from "./types.js";
 
 // ─────────────────────────────────────────────────────────────
 // Settling Phrases — Grounding Into Presence
@@ -136,25 +129,31 @@ export function breatheWhileInterpreting(): string {
 // ─────────────────────────────────────────────────────────────
 
 const FRUSTRATION_MARKERS: readonly string[] = [
-	"stuck", "confused", "frustrated", "can't", "don't know",
-	"lost", "ugh", "fuck", "damn", "broken",
+	"stuck",
+	"confused",
+	"frustrated",
+	"can't",
+	"don't know",
+	"lost",
+	"ugh",
+	"fuck",
+	"damn",
+	"broken",
 ];
 
-const CELEBRATION_MARKERS: readonly string[] = [
-	"works", "done", "finally", "yay", "success", "completed", "finished",
-];
+const CELEBRATION_MARKERS: readonly string[] = ["works", "done", "finally", "yay", "success", "completed", "finished"];
 
-const SEEKING_MARKERS: readonly string[] = [
-	"how", "what", "why", "help", "need", "want", "looking for",
-];
+const SEEKING_MARKERS: readonly string[] = ["how", "what", "why", "help", "need", "want", "looking for"];
 
 const CONTEMPLATION_MARKERS: readonly string[] = [
-	"thinking about", "wondering", "considering", "reflecting", "curious",
+	"thinking about",
+	"wondering",
+	"considering",
+	"reflecting",
+	"curious",
 ];
 
-const STRUGGLE_MARKERS: readonly string[] = [
-	"struggling", "hard", "difficult", "overwhelmed", "too much", "drowning",
-];
+const STRUGGLE_MARKERS: readonly string[] = ["struggling", "hard", "difficult", "overwhelmed", "too much", "drowning"];
 
 function containsAny(input: string, markers: readonly string[]): boolean {
 	const lower = input.toLowerCase();
@@ -199,7 +198,6 @@ export function settleIntoResponse(state: PresenceState): string {
 			return "*settling into listening*\n\n";
 		case "invite":
 			return "*opening space*\n\n";
-		case "explore":
 		default:
 			return `${settleIntoPhrase()}\n\n`;
 	}
@@ -224,10 +222,7 @@ export function deepenBreath(state: SettlingState): SettlingState {
 	const nextCount = state.breathCount + 1;
 
 	const depth: PresenceDepth =
-		nextCount >= 5 ? "sacred" :
-		nextCount >= 3 ? "deep" :
-		nextCount >= 1 ? "settling" :
-		"surface";
+		nextCount >= 5 ? "sacred" : nextCount >= 3 ? "deep" : nextCount >= 1 ? "settling" : "surface";
 
 	return {
 		isSettled: nextCount >= 3,
@@ -254,8 +249,12 @@ export function shouldHoldNotFix(userInput: string): boolean {
 	const lower = userInput.toLowerCase();
 
 	const ventingMarkers = [
-		"just venting", "need to vent", "not looking for advice",
-		"don't fix", "just listen", "i just need",
+		"just venting",
+		"need to vent",
+		"not looking for advice",
+		"don't fix",
+		"just listen",
+		"i just need",
 	];
 
 	return ventingMarkers.some((m) => lower.includes(m));

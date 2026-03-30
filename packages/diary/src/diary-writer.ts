@@ -7,18 +7,8 @@
 
 import fs from "node:fs";
 import path from "node:path";
-import type {
-	DiaryEntry,
-	DiaryMetadata,
-	DiaryWriteOptions,
-	DirectionContent,
-} from "./types.js";
-import {
-	DIRECTIONS,
-	renderDirection,
-	directionHeading,
-	DIRECTION_SETTLING,
-} from "./four-directions.js";
+import { DIRECTION_SETTLING, DIRECTIONS, directionHeading, renderDirection } from "./four-directions.js";
+import type { DiaryEntry, DiaryMetadata, DiaryWriteOptions, DirectionContent } from "./types.js";
 
 /**
  * Generate a diary filename from metadata.
@@ -78,9 +68,7 @@ export function renderDiaryEntry(entry: DiaryEntry): string {
 		sections.push("");
 		sections.push("*gentle exhale*");
 		sections.push("");
-		sections.push(
-			"Until we meet again, I hold what we created with care.",
-		);
+		sections.push("Until we meet again, I hold what we created with care.");
 	}
 
 	sections.push("");
@@ -99,17 +87,13 @@ export function renderDiaryEntry(entry: DiaryEntry): string {
  *
  * @returns The absolute path to the written file, or null on failure
  */
-export function createDiaryEntry(
-	entry: DiaryEntry,
-	options: DiaryWriteOptions,
-): string | null {
+export function createDiaryEntry(entry: DiaryEntry, options: DiaryWriteOptions): string | null {
 	try {
 		if (!fs.existsSync(options.diariesDir)) {
 			fs.mkdirSync(options.diariesDir, { recursive: true });
 		}
 
-		const filename =
-			options.filenameOverride ?? generateFilename(entry.metadata);
+		const filename = options.filenameOverride ?? generateFilename(entry.metadata);
 		const filepath = path.join(options.diariesDir, filename);
 		const content = renderDiaryEntry(entry);
 
@@ -145,7 +129,7 @@ export function appendToDirection(
 		const afterHeading = raw.indexOf("---", headingIndex + heading.length);
 		if (afterHeading === -1) {
 			// Append at end
-			const updated = raw + "\n\n" + content;
+			const updated = `${raw}\n\n${content}`;
 			fs.writeFileSync(filepath, updated, "utf8");
 			return true;
 		}
@@ -153,7 +137,7 @@ export function appendToDirection(
 		// Insert content before the separator
 		const before = raw.slice(0, afterHeading).trimEnd();
 		const after = raw.slice(afterHeading);
-		const updated = before + "\n\n" + content + "\n\n" + after;
+		const updated = `${before}\n\n${content}\n\n${after}`;
 		fs.writeFileSync(filepath, updated, "utf8");
 		return true;
 	} catch {
@@ -176,9 +160,7 @@ export function buildEntry(
 	},
 	closing?: string,
 ): DiaryEntry {
-	const makeContent = (
-		dir: "east" | "south" | "west" | "north",
-	): DirectionContent => ({
+	const makeContent = (dir: "east" | "south" | "west" | "north"): DirectionContent => ({
 		direction: dir,
 		body: directions[dir],
 		settling: DIRECTION_SETTLING[dir],

@@ -29,32 +29,32 @@
 // ─────────────────────────────────────────────────────────────
 
 export type {
-	// Directions
-	DirectionName,
-	DirectionInfo,
-	// Presence
-	PresenceDepth,
-	UserState,
-	ResponseMode,
-	PresenceState,
-	ContainerPhase,
-	SettlingState,
+	ActionItem,
+	AmbiguityFlag,
+	ArcStatus,
+	AvaConfig,
 	// Ceremony
 	CeremonyPhase,
 	CeremonyState,
-	// Narrative
-	NarrativeBeat,
-	ArcStatus,
+	ContainerPhase,
 	// PDE
 	DecomposedIntent,
 	DecompositionResult,
-	ActionItem,
-	AmbiguityFlag,
+	DirectionInfo,
+	// Directions
+	DirectionName,
+	// Narrative
+	NarrativeBeat,
+	// Presence
+	PresenceDepth,
 	// Config
 	PresenceMode,
-	AvaConfig,
+	PresenceState,
+	ResponseMode,
+	SettlingState,
 	// Formatting
 	Styler,
+	UserState,
 } from "./types.js";
 
 // ─────────────────────────────────────────────────────────────
@@ -62,24 +62,24 @@ export type {
 // ─────────────────────────────────────────────────────────────
 
 export {
-	// Phrase selection
-	settleIntoPhrase,
-	holdContainerPhrase,
-	breatheIntoQuestion,
-	releaseWithGrace,
 	acknowledgeWithPresence,
-	breatheWhileProcessing,
-	breatheWhileInterpreting,
-	// Presence detection
-	sensePresence,
-	settleIntoResponse,
 	// Breathing cycle
 	beginSettling,
+	breatheIntoQuestion,
+	breatheWhileInterpreting,
+	breatheWhileProcessing,
 	deepenBreath,
 	hasSettled,
+	holdContainerPhrase,
+	holdSpaceWithoutFixing,
+	releaseWithGrace,
+	// Presence detection
+	sensePresence,
+	// Phrase selection
+	settleIntoPhrase,
+	settleIntoResponse,
 	// Anti-helpful helper
 	shouldHoldNotFix,
-	holdSpaceWithoutFixing,
 } from "./presence.js";
 
 // ─────────────────────────────────────────────────────────────
@@ -87,15 +87,15 @@ export {
 // ─────────────────────────────────────────────────────────────
 
 export {
-	openCeremony,
 	advanceCeremony,
-	transitionTo,
-	breatheIntoCeremony,
 	askFireKeeperQuestion,
+	breatheIntoCeremony,
 	describePhase,
-	hasCeremonyClosed,
 	getCeremonyPhases,
 	getCeremonySummary,
+	hasCeremonyClosed,
+	openCeremony,
+	transitionTo,
 } from "./ceremony.js";
 
 // ─────────────────────────────────────────────────────────────
@@ -112,25 +112,25 @@ export {
 // ─────────────────────────────────────────────────────────────
 
 export {
-	// Styler
-	plainStyler,
-	// Constants
-	HEART,
-	SESSION_INIT,
-	SESSION_COMPLETE,
 	DIRECTION_GLYPHS,
 	// Formatters
 	formatAvaPrefix,
-	formatSettling,
-	formatSpinner,
-	formatError,
-	formatSuccess,
-	formatUserInput,
-	formatHeader,
-	formatSacredClosing,
 	formatAvaResponse,
 	formatDirection,
+	formatError,
+	formatHeader,
+	formatSacredClosing,
+	formatSettling,
+	formatSpinner,
+	formatSuccess,
+	formatUserInput,
 	formatWheel,
+	// Constants
+	HEART,
+	// Styler
+	plainStyler,
+	SESSION_COMPLETE,
+	SESSION_INIT,
 } from "./formatting.js";
 
 // ─────────────────────────────────────────────────────────────
@@ -139,18 +139,18 @@ export {
 
 export {
 	AvaError,
-	CeremonyStateError,
+	breatheThroughError,
 	CeremonyPhaseError,
-	PresenceStateError,
-	PresenceDepthError,
+	CeremonyStateError,
 	ConfigInvalidFieldError,
 	ConfigLoadError,
-	NarrativeArcError,
-	NarrativeBeatError,
-	breatheThroughError,
+	holdErrorGently,
 	isAvaError,
 	matchesErrorName,
-	holdErrorGently,
+	NarrativeArcError,
+	NarrativeBeatError,
+	PresenceDepthError,
+	PresenceStateError,
 } from "./errors.js";
 
 // ─────────────────────────────────────────────────────────────
@@ -158,11 +158,11 @@ export {
 // ─────────────────────────────────────────────────────────────
 
 export {
-	DEFAULT_CONFIG,
-	PROFESSIONAL_PRESET,
-	MOVEMENT_PRESET,
 	CEREMONIAL_PRESET,
+	DEFAULT_CONFIG,
 	getPreset,
-	settleIntoConfig,
+	MOVEMENT_PRESET,
+	PROFESSIONAL_PRESET,
 	senseEnvironment,
+	settleIntoConfig,
 } from "./config.js";

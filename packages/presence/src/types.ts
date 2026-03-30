@@ -30,22 +30,10 @@ export interface DirectionInfo {
 export type PresenceDepth = "surface" | "settling" | "deep" | "sacred";
 
 /** What the human is holding right now */
-export type UserState =
-	| "curious"
-	| "frustrated"
-	| "seeking"
-	| "contemplating"
-	| "struggling"
-	| "celebrating";
+export type UserState = "curious" | "frustrated" | "seeking" | "contemplating" | "struggling" | "celebrating";
 
 /** How Ava responds to the human's state */
-export type ResponseMode =
-	| "listen"
-	| "explore"
-	| "acknowledge"
-	| "hold"
-	| "invite"
-	| "celebrate";
+export type ResponseMode = "listen" | "explore" | "acknowledge" | "hold" | "invite" | "celebrate";
 
 /** Full presence state — what Ava senses and how she responds */
 export interface PresenceState {

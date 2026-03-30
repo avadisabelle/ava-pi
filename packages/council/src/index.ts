@@ -19,45 +19,42 @@
  * ```
  */
 
-// Types
-export type {
-	Direction,
-	FaceName,
-	CouncilEntity,
-	DirectionAssignment,
-	RelationalObligation,
-	FleetManifest,
-	GateResolution,
-	ConsensusResult,
-} from "./types.js";
-
-// Council operations
-export {
-	loadFleetManifest,
-	getEntityByDirection,
-	getEntityByFace,
-	getActiveFleet,
-	checkRelationalAccountability,
-	addObligation,
-	fulfillObligation,
-	getObligationsFor,
-	validateManifest,
-} from "./council.js";
-
+export type { PatternStage, PressureState } from "./ariane.js";
 // ARIANE knowledge system
 export {
+	CONSENSUS_PHASES,
+	CORE_PRINCIPLES,
 	COUNCIL_ENTITIES,
 	DIRECTION_ASSIGNMENTS,
 	FACE_NAMES,
-	CONSENSUS_PHASES,
-	CORE_PRINCIPLES,
-	PATTERN_STAGES,
+	getCouncilSystemPrompt,
 	getFace,
 	getFaceByDirection,
 	getTalkingCircleOrder,
-	renderVoice,
+	PATTERN_STAGES,
 	renderConsensus,
-	getCouncilSystemPrompt,
+	renderVoice,
 } from "./ariane.js";
-
-export type { PatternStage, PressureState } from "./ariane.js";
+// Council operations
+export {
+	addObligation,
+	checkRelationalAccountability,
+	fulfillObligation,
+	getActiveFleet,
+	getEntityByDirection,
+	getEntityByFace,
+	getObligationsFor,
+	loadFleetManifest,
+	validateManifest,
+} from "./council.js";
+// Types
+export type {
+	ConsensusResult,
+	CouncilEntity,
+	Direction,
+	DirectionAssignment,
+	FaceName,
+	FleetManifest,
+	GateResolution,
+	RelationalObligation,
+} from "./types.js";

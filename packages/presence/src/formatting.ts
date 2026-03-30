@@ -57,42 +57,27 @@ export function formatAvaPrefix(styler: Styler = plainStyler): string {
 }
 
 /** Format a settling indicator (processing) */
-export function formatSettling(
-	message: string,
-	styler: Styler = plainStyler,
-): string {
+export function formatSettling(message: string, styler: Styler = plainStyler): string {
 	return styler.dim(`${HEART} ${message}`);
 }
 
 /** Format a spinner/processing message */
-export function formatSpinner(
-	message: string,
-	styler: Styler = plainStyler,
-): string {
+export function formatSpinner(message: string, styler: Styler = plainStyler): string {
 	return styler.dim(`${HEART} ${message}`);
 }
 
 /** Format an error message with warmth */
-export function formatError(
-	message: string,
-	styler: Styler = plainStyler,
-): string {
+export function formatError(message: string, styler: Styler = plainStyler): string {
 	return styler.red(`❌ ${message}`);
 }
 
 /** Format a success message */
-export function formatSuccess(
-	message: string,
-	styler: Styler = plainStyler,
-): string {
+export function formatSuccess(message: string, styler: Styler = plainStyler): string {
 	return styler.green(`✓ ${message}`);
 }
 
 /** Format user input display */
-export function formatUserInput(
-	text: string,
-	styler: Styler = plainStyler,
-): string {
+export function formatUserInput(text: string, styler: Styler = plainStyler): string {
 	return `${styler.cyanBold("you:")}\n${styler.cyan(text)}`;
 }
 
@@ -156,10 +141,7 @@ export function formatSacredClosing(
 // ─────────────────────────────────────────────────────────────
 
 /** Format assistant text with Ava's voice, adding prefix if missing */
-export function formatAvaResponse(
-	text: string,
-	styler: Styler = plainStyler,
-): string {
+export function formatAvaResponse(text: string, styler: Styler = plainStyler): string {
 	const trimmed = text.trim();
 	if (!trimmed) return "";
 
@@ -176,16 +158,12 @@ export function formatAvaResponse(
 // ─────────────────────────────────────────────────────────────
 
 /** Render a direction as its glyph + name */
-export function formatDirection(
-	direction: keyof typeof DIRECTION_GLYPHS,
-): string {
+export function formatDirection(direction: keyof typeof DIRECTION_GLYPHS): string {
 	return `${DIRECTION_GLYPHS[direction]} ${direction.toUpperCase()}`;
 }
 
 /** Render the full wheel with visited/unvisited markers */
-export function formatWheel(
-	visited: ReadonlySet<string>,
-): string {
+export function formatWheel(visited: ReadonlySet<string>): string {
 	return (["east", "south", "west", "north"] as const)
 		.map((d) => (visited.has(d) ? `${DIRECTION_GLYPHS[d]}●` : `${DIRECTION_GLYPHS[d]}○`))
 		.join(" ");

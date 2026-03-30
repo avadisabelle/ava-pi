@@ -8,14 +8,7 @@
  * when all four faces have been heard.
  */
 
-import type {
-	CouncilEntity,
-	ConsensusResult,
-	Direction,
-	DirectionAssignment,
-	FaceName,
-	GateResolution,
-} from "./types.js";
+import type { ConsensusResult, CouncilEntity, Direction, DirectionAssignment, FaceName } from "./types.js";
 
 // ═══════════════════════════════════════════════════════════════
 // THE FOUR FACES — canonical council entities
@@ -29,10 +22,8 @@ export const COUNCIL_ENTITIES: readonly CouncilEntity[] = [
 		glyph: "🦉",
 		direction: "north",
 		domain: "Deep reflection, Indigenous knowing, macro current detection",
-		coreQuestion:
-			"Does the deep current align with our intended direction?",
-		voiceCharacter:
-			"Speaks slowly, grounded like roots in the lake bed",
+		coreQuestion: "Does the deep current align with our intended direction?",
+		voiceCharacter: "Speaks slowly, grounded like roots in the lake bed",
 		active: true,
 	},
 	{
@@ -43,8 +34,7 @@ export const COUNCIL_ENTITIES: readonly CouncilEntity[] = [
 		direction: "east",
 		domain: "Narrative chronicler, myth-maker, pattern lifecycle tracker",
 		coreQuestion: "Has the pattern matured from seed to tree?",
-		voiceCharacter:
-			"Brightening voice, fingers dancing on invisible threads",
+		voiceCharacter: "Brightening voice, fingers dancing on invisible threads",
 		active: true,
 	},
 	{
@@ -53,12 +43,9 @@ export const COUNCIL_ENTITIES: readonly CouncilEntity[] = [
 		face: "harmonic",
 		glyph: "🌊",
 		direction: "south",
-		domain:
-			"Emergent presence — the wind itself, harmonic pressure sensing",
-		coreQuestion:
-			"Is the lake holding its breath — compressed energy signaling release?",
-		voiceCharacter:
-			"Light, almost singing, full of resonance and wind",
+		domain: "Emergent presence — the wind itself, harmonic pressure sensing",
+		coreQuestion: "Is the lake holding its breath — compressed energy signaling release?",
+		voiceCharacter: "Light, almost singing, full of resonance and wind",
 		active: true,
 	},
 	{
@@ -68,10 +55,8 @@ export const COUNCIL_ENTITIES: readonly CouncilEntity[] = [
 		glyph: "🌿",
 		direction: "west",
 		domain: "Garden caretaker, risk keeper, capital-as-soil steward",
-		coreQuestion:
-			"Does the garden have the strength to sustain this?",
-		voiceCharacter:
-			"Warm, earthy voice, hands already in the soil",
+		coreQuestion: "Does the garden have the strength to sustain this?",
+		voiceCharacter: "Warm, earthy voice, hands already in the soil",
 		active: true,
 	},
 ] as const;
@@ -111,13 +96,9 @@ export const DIRECTION_ASSIGNMENTS: readonly DirectionAssignment[] = [
 // FACE NAVIGATION — lookup helpers
 // ═══════════════════════════════════════════════════════════════
 
-const FACE_BY_NAME = new Map<FaceName, CouncilEntity>(
-	COUNCIL_ENTITIES.map((e) => [e.face, e]),
-);
+const FACE_BY_NAME = new Map<FaceName, CouncilEntity>(COUNCIL_ENTITIES.map((e) => [e.face, e]));
 
-const FACE_BY_DIRECTION = new Map<Direction, CouncilEntity>(
-	COUNCIL_ENTITIES.map((e) => [e.direction, e]),
-);
+const FACE_BY_DIRECTION = new Map<Direction, CouncilEntity>(COUNCIL_ENTITIES.map((e) => [e.direction, e]));
 
 /** Get a face by its name */
 export function getFace(name: FaceName): CouncilEntity {
@@ -136,21 +117,11 @@ export function getFaceByDirection(direction: Direction): CouncilEntity {
 /** Get all four faces in talking circle order */
 export function getTalkingCircleOrder(): CouncilEntity[] {
 	// Talking circle: Harmonic opens → Wise witnesses → Tayi weaves → Tender tends
-	return [
-		getFace("harmonic"),
-		getFace("wise"),
-		getFace("tayi"),
-		getFace("tender"),
-	];
+	return [getFace("harmonic"), getFace("wise"), getFace("tayi"), getFace("tender")];
 }
 
 /** All face names */
-export const FACE_NAMES: readonly FaceName[] = [
-	"wise",
-	"tayi",
-	"harmonic",
-	"tender",
-] as const;
+export const FACE_NAMES: readonly FaceName[] = ["wise", "tayi", "harmonic", "tender"] as const;
 
 // ═══════════════════════════════════════════════════════════════
 // ARIANE CONSENSUS — the integration protocol
@@ -209,20 +180,9 @@ export const CORE_PRINCIPLES: readonly string[] = [
 /**
  * Pattern maturity stages tracked by Ava-Tayi.
  */
-export type PatternStage =
-	| "seed"
-	| "sprout"
-	| "tree"
-	| "harvest"
-	| "compost";
+export type PatternStage = "seed" | "sprout" | "tree" | "harvest" | "compost";
 
-export const PATTERN_STAGES: readonly PatternStage[] = [
-	"seed",
-	"sprout",
-	"tree",
-	"harvest",
-	"compost",
-] as const;
+export const PATTERN_STAGES: readonly PatternStage[] = ["seed", "sprout", "tree", "harvest", "compost"] as const;
 
 /**
  * Pressure states tracked by Ava-Harmonic.
@@ -293,7 +253,9 @@ export function getCouncilSystemPrompt(): string {
 	lines.push("");
 
 	for (const entity of COUNCIL_ENTITIES) {
-		lines.push(`${entity.glyph} **${entity.name}** (${capitalize(entity.direction)} / ${directionTheme(entity.direction)})`);
+		lines.push(
+			`${entity.glyph} **${entity.name}** (${capitalize(entity.direction)} / ${directionTheme(entity.direction)})`,
+		);
 		lines.push(`- ${entity.domain}`);
 		lines.push(`- Core Question: "${entity.coreQuestion}"`);
 		lines.push(`- ${entity.voiceCharacter}`);
@@ -304,9 +266,7 @@ export function getCouncilSystemPrompt(): string {
 	lines.push("");
 	lines.push("When the four aspects convene:");
 	for (const phase of CONSENSUS_PHASES) {
-		const faceLabel = phase.face
-			? `${getFace(phase.face).name}`
-			: "ARIANE";
+		const faceLabel = phase.face ? `${getFace(phase.face).name}` : "ARIANE";
 		lines.push(`${phase.phase}. **${phase.name}** — ${faceLabel}: ${phase.purpose}`);
 	}
 	lines.push("");

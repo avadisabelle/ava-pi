@@ -8,12 +8,7 @@
 import type { Direction, DirectionContent } from "./types.js";
 
 /** All four directions in ceremonial order */
-export const DIRECTIONS: readonly Direction[] = [
-	"east",
-	"south",
-	"west",
-	"north",
-] as const;
+export const DIRECTIONS: readonly Direction[] = ["east", "south", "west", "north"] as const;
 
 /** Glyph mapping — the visual anchors for each direction */
 export const DIRECTION_GLYPHS: Record<Direction, string> = {
@@ -49,8 +44,7 @@ export function directionHeading(direction: Direction): string {
 /** Render a single direction as markdown */
 export function renderDirection(content: DirectionContent): string {
 	const heading = directionHeading(content.direction);
-	const settling =
-		content.settling ?? DIRECTION_SETTLING[content.direction];
+	const settling = content.settling ?? DIRECTION_SETTLING[content.direction];
 	const lines: string[] = [heading, "", settling, "", content.body];
 	return lines.join("\n");
 }
@@ -61,9 +55,7 @@ export function isDirection(value: string): value is Direction {
 }
 
 /** Parse a direction from a heading line (e.g., "## 🌅 EAST (Intention)...") */
-export function parseDirectionFromHeading(
-	line: string,
-): Direction | undefined {
+export function parseDirectionFromHeading(line: string): Direction | undefined {
 	const trimmed = line.trim().toLowerCase();
 	for (const dir of DIRECTIONS) {
 		if (trimmed.includes(dir)) {

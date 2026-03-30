@@ -1,7 +1,7 @@
-import { Alert } from "@mariozechner/mini-lit/dist/Alert.js";
 import type { Message } from "@avadisabelle/ava-pi-ai";
 import type { AgentMessage, MessageRenderer } from "@avadisabelle/ava-pi-web-ui";
 import { defaultConvertToLlm, registerMessageRenderer } from "@avadisabelle/ava-pi-web-ui";
+import { Alert } from "@mariozechner/mini-lit/dist/Alert.js";
 import { html } from "lit";
 
 // ============================================================================

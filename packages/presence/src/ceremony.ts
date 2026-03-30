@@ -13,26 +13,17 @@ import type { CeremonyPhase, CeremonyState } from "./types.js";
 // Phase Order — The Ceremonial Spiral
 // ─────────────────────────────────────────────────────────────
 
-const PHASE_ORDER: readonly CeremonyPhase[] = [
-	"opening",
-	"council",
-	"integration",
-	"closure",
-];
+const PHASE_ORDER: readonly CeremonyPhase[] = ["opening", "council", "integration", "closure"];
 
 // ─────────────────────────────────────────────────────────────
 // Settling Phrases — How Each Phase Breathes Into Being
 // ─────────────────────────────────────────────────────────────
 
 const CEREMONY_SETTLING: Readonly<Record<CeremonyPhase, string>> = {
-	opening:
-		"💕 *opening the sacred space, settling into presence together*",
-	council:
-		"💕 *entering council — speaking and listening with full presence*",
-	integration:
-		"💕 *integrating what has emerged, breathing into understanding*",
-	closure:
-		"💕 *gently honoring what was shared, releasing the space with care*",
+	opening: "💕 *opening the sacred space, settling into presence together*",
+	council: "💕 *entering council — speaking and listening with full presence*",
+	integration: "💕 *integrating what has emerged, breathing into understanding*",
+	closure: "💕 *gently honoring what was shared, releasing the space with care*",
 };
 
 // ─────────────────────────────────────────────────────────────
@@ -67,14 +58,10 @@ const CEREMONY_QUESTIONS: Readonly<Record<CeremonyPhase, readonly string[]>> = {
 // ─────────────────────────────────────────────────────────────
 
 const PHASE_DESCRIPTIONS: Readonly<Record<CeremonyPhase, string>> = {
-	opening:
-		"Arriving, grounding, setting intention. The fire is being lit.",
-	council:
-		"Speaking truth, listening deeply, letting what needs to emerge emerge.",
-	integration:
-		"Gathering threads, finding meaning, breathing into understanding.",
-	closure:
-		"Honoring what was shared, releasing the container, carrying forward.",
+	opening: "Arriving, grounding, setting intention. The fire is being lit.",
+	council: "Speaking truth, listening deeply, letting what needs to emerge emerge.",
+	integration: "Gathering threads, finding meaning, breathing into understanding.",
+	closure: "Honoring what was shared, releasing the container, carrying forward.",
 };
 
 // ─────────────────────────────────────────────────────────────
@@ -99,10 +86,7 @@ export function openCeremony(): CeremonyState {
  * - 5+ exchanges → integration (meaning-making)
  * - 8+ exchanges → closure (honoring and releasing)
  */
-export function advanceCeremony(
-	state: CeremonyState,
-	promptCount: number,
-): CeremonyState {
+export function advanceCeremony(state: CeremonyState, promptCount: number): CeremonyState {
 	const currentIdx = PHASE_ORDER.indexOf(state.phase);
 
 	let targetIdx = currentIdx;
@@ -127,10 +111,7 @@ export function advanceCeremony(
  * Transition ceremony to a specific phase.
  * Useful when the human explicitly shifts the container.
  */
-export function transitionTo(
-	state: CeremonyState,
-	phase: CeremonyPhase,
-): CeremonyState {
+export function transitionTo(state: CeremonyState, phase: CeremonyPhase): CeremonyState {
 	if (state.phase === phase) return state;
 
 	return {
@@ -183,9 +164,7 @@ export function getCeremonySummary(state: CeremonyState): string {
 	};
 
 	const visited = new Set(state.phaseHistory);
-	const wheel = PHASE_ORDER
-		.map((p) => (visited.has(p) ? `${phaseEmoji[p]}●` : `${phaseEmoji[p]}○`))
-		.join(" ");
+	const wheel = PHASE_ORDER.map((p) => (visited.has(p) ? `${phaseEmoji[p]}●` : `${phaseEmoji[p]}○`)).join(" ");
 
 	const elapsed = Date.now() - new Date(state.startedAt).getTime();
 	const minutes = Math.floor(elapsed / 60000);

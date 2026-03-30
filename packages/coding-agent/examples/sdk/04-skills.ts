@@ -5,7 +5,12 @@
  * Discover, filter, merge, or replace them.
  */
 
-import { createAgentSession, DefaultResourceLoader, SessionManager, type Skill } from "@avadisabelle/ava-pi-coding-agent";
+import {
+	createAgentSession,
+	DefaultResourceLoader,
+	SessionManager,
+	type Skill,
+} from "@avadisabelle/ava-pi-coding-agent";
 
 // Or define custom skills inline
 const customSkill: Skill = {

@@ -9,17 +9,17 @@ import { createRequire } from "node:module";
 import * as os from "node:os";
 import * as path from "node:path";
 import { fileURLToPath } from "node:url";
-import { createJiti } from "@mariozechner/jiti";
 import * as _bundledPiAgentCore from "@avadisabelle/ava-pi-agent-core";
 import * as _bundledPiAi from "@avadisabelle/ava-pi-ai";
 import * as _bundledPiAiOauth from "@avadisabelle/ava-pi-ai/oauth";
 import type { KeyId } from "@avadisabelle/ava-pi-tui";
 import * as _bundledPiTui from "@avadisabelle/ava-pi-tui";
+import { createJiti } from "@mariozechner/jiti";
 // Static imports of packages that extensions may use.
 // These MUST be static so Bun bundles them into the compiled binary.
 // The virtualModules option then makes them available to extensions.
 import * as _bundledTypebox from "@sinclair/typebox";
-import { getAgentDir, isBunBinary } from "../../config.js";
+import { CONFIG_DIR_NAME, getAgentDir, isBunBinary } from "../../config.js";
 // NOTE: This import works because loader.ts exports are NOT re-exported from index.ts,
 // avoiding a circular dependency. Extensions can import from @avadisabelle/ava-pi-coding-agent.
 import * as _bundledPiCodingAgent from "../../index.js";
@@ -75,7 +75,10 @@ function getAliases(): Record<string, string> {
 
 	_aliases = {
 		"@avadisabelle/ava-pi-coding-agent": packageIndex,
-		"@avadisabelle/ava-pi-agent-core": resolveWorkspaceOrImport("agent/dist/index.js", "@avadisabelle/ava-pi-agent-core"),
+		"@avadisabelle/ava-pi-agent-core": resolveWorkspaceOrImport(
+			"agent/dist/index.js",
+			"@avadisabelle/ava-pi-agent-core",
+		),
 		"@avadisabelle/ava-pi-tui": resolveWorkspaceOrImport("tui/dist/index.js", "@avadisabelle/ava-pi-tui"),
 		"@avadisabelle/ava-pi-ai": resolveWorkspaceOrImport("ai/dist/index.js", "@avadisabelle/ava-pi-ai"),
 		"@avadisabelle/ava-pi-ai/oauth": resolveWorkspaceOrImport("ai/dist/oauth.js", "@avadisabelle/ava-pi-ai/oauth"),
@@ -395,8 +398,10 @@ function readPiManifest(packageJsonPath: string): PiManifest | null {
 	try {
 		const content = fs.readFileSync(packageJsonPath, "utf-8");
 		const pkg = JSON.parse(content);
-		if (pkg.pi && typeof pkg.pi === "object") {
-			return pkg.pi as PiManifest;
+		// Support both "pva" (rebranded) and "pi" (upstream compat) manifest fields
+		const manifest = pkg.pva ?? pkg.pi;
+		if (manifest && typeof manifest === "object") {
+			return manifest as PiManifest;
 		}
 		return null;
 	} catch {
@@ -515,8 +520,8 @@ export async function discoverAndLoadExtensions(
 		}
 	};
 
-	// 1. Project-local extensions: cwd/.pi/extensions/
-	const localExtDir = path.join(cwd, ".pi", "extensions");
+	// 1. Project-local extensions: cwd/{CONFIG_DIR_NAME}/extensions/
+	const localExtDir = path.join(cwd, CONFIG_DIR_NAME, "extensions");
 	addPaths(discoverExtensionsInDir(localExtDir));
 
 	// 2. Global extensions: agentDir/extensions/

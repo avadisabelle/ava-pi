@@ -5,7 +5,9 @@
  *
  * Test with: npx tsx src/cli-new.ts [args...]
  */
-process.title = "pi";
+import { APP_NAME } from "./config.js";
+
+process.title = APP_NAME;
 process.emitWarning = (() => {}) as typeof process.emitWarning;
 
 import { EnvHttpProxyAgent, setGlobalDispatcher } from "undici";

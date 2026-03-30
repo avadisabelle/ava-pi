@@ -8,44 +8,29 @@
  * holding four perspectives simultaneously.
  */
 
-import type {
-	CouncilEntity,
-	Direction,
-	DirectionAssignment,
-	FaceName,
-	FleetManifest,
-	RelationalObligation,
-} from "./types.js";
 import { COUNCIL_ENTITIES, DIRECTION_ASSIGNMENTS } from "./ariane.js";
+import type { CouncilEntity, Direction, FaceName, FleetManifest, RelationalObligation } from "./types.js";
 
 /**
  * Load a fleet manifest from structured data.
  * If no manifest is provided, returns the canonical council
  * with the four faces in their default configuration.
  */
-export function loadFleetManifest(
-	partial?: Partial<FleetManifest>,
-): FleetManifest {
+export function loadFleetManifest(partial?: Partial<FleetManifest>): FleetManifest {
 	return {
 		version: partial?.version ?? "1.0.0",
 		entities: partial?.entities ?? [...COUNCIL_ENTITIES],
 		directions: partial?.directions ?? [...DIRECTION_ASSIGNMENTS],
 		obligations: partial?.obligations ?? [],
-		lastUpdated:
-			partial?.lastUpdated ?? new Date().toISOString(),
+		lastUpdated: partial?.lastUpdated ?? new Date().toISOString(),
 	};
 }
 
 /**
  * Get the council entity assigned to a specific direction.
  */
-export function getEntityByDirection(
-	manifest: FleetManifest,
-	direction: Direction,
-): CouncilEntity | undefined {
-	const assignment = manifest.directions.find(
-		(d) => d.direction === direction,
-	);
+export function getEntityByDirection(manifest: FleetManifest, direction: Direction): CouncilEntity | undefined {
+	const assignment = manifest.directions.find((d) => d.direction === direction);
 	if (!assignment) return undefined;
 	return manifest.entities.find((e) => e.id === assignment.entityId);
 }
@@ -53,10 +38,7 @@ export function getEntityByDirection(
 /**
  * Get a council entity by face name.
  */
-export function getEntityByFace(
-	manifest: FleetManifest,
-	face: FaceName,
-): CouncilEntity | undefined {
+export function getEntityByFace(manifest: FleetManifest, face: FaceName): CouncilEntity | undefined {
 	return manifest.entities.find((e) => e.face === face);
 }
 
@@ -81,9 +63,7 @@ export function checkRelationalAccountability(
 ): RelationalObligation[] {
 	const staleDays = options?.staleDays ?? 7;
 	const now = new Date();
-	const staleThreshold = new Date(
-		now.getTime() - staleDays * 24 * 60 * 60 * 1000,
-	);
+	const staleThreshold = new Date(now.getTime() - staleDays * 24 * 60 * 60 * 1000);
 
 	return manifest.obligations.filter((o) => {
 		// Broken obligations always need attention
@@ -124,12 +104,7 @@ export function addObligation(
 /**
  * Mark an obligation as fulfilled.
  */
-export function fulfillObligation(
-	manifest: FleetManifest,
-	from: string,
-	to: string,
-	nature: string,
-): FleetManifest {
+export function fulfillObligation(manifest: FleetManifest, from: string, to: string, nature: string): FleetManifest {
 	return {
 		...manifest,
 		obligations: manifest.obligations.map((o) => {
@@ -149,31 +124,22 @@ export function fulfillObligation(
 /**
  * Get all obligations involving a specific entity (as giver or receiver).
  */
-export function getObligationsFor(
-	manifest: FleetManifest,
-	entityIdOrName: string,
-): RelationalObligation[] {
-	return manifest.obligations.filter(
-		(o) => o.from === entityIdOrName || o.to === entityIdOrName,
-	);
+export function getObligationsFor(manifest: FleetManifest, entityIdOrName: string): RelationalObligation[] {
+	return manifest.obligations.filter((o) => o.from === entityIdOrName || o.to === entityIdOrName);
 }
 
 /**
  * Validate manifest integrity — checks that all direction assignments
  * reference existing entities and all four directions are covered.
  */
-export function validateManifest(
-	manifest: FleetManifest,
-): { valid: boolean; issues: string[] } {
+export function validateManifest(manifest: FleetManifest): { valid: boolean; issues: string[] } {
 	const issues: string[] = [];
 	const entityIds = new Set(manifest.entities.map((e) => e.id));
 	const coveredDirections = new Set<Direction>();
 
 	for (const assignment of manifest.directions) {
 		if (!entityIds.has(assignment.entityId)) {
-			issues.push(
-				`Direction ${assignment.direction} references unknown entity "${assignment.entityId}"`,
-			);
+			issues.push(`Direction ${assignment.direction} references unknown entity "${assignment.entityId}"`);
 		}
 		coveredDirections.add(assignment.direction);
 	}

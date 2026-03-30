@@ -6,13 +6,7 @@
 
 // ── Ceremony Lifecycle ──────────────────────────────────────────────────────
 
-export type CeremonyPhase =
-	| "opening"
-	| "settling"
-	| "deepening"
-	| "threshold"
-	| "integration"
-	| "closing";
+export type CeremonyPhase = "opening" | "settling" | "deepening" | "threshold" | "integration" | "closing";
 
 export const CEREMONY_PHASES: Record<CeremonyPhase, { emoji: string; name: string; verb: string }> = {
 	opening: { emoji: "🕯️", name: "OPENING", verb: "Gathering intention" },

@@ -23,7 +23,12 @@
  *   pi -e ./built-in-tool-renderer.ts
  */
 
-import type { BashToolDetails, EditToolDetails, ExtensionAPI, ReadToolDetails } from "@avadisabelle/ava-pi-coding-agent";
+import type {
+	BashToolDetails,
+	EditToolDetails,
+	ExtensionAPI,
+	ReadToolDetails,
+} from "@avadisabelle/ava-pi-coding-agent";
 import { createBashTool, createEditTool, createReadTool, createWriteTool } from "@avadisabelle/ava-pi-coding-agent";
 import { Text } from "@avadisabelle/ava-pi-tui";
 

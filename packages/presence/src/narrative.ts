@@ -7,7 +7,7 @@
  * 💕 The narrative is not imposed — it is witnessed as it emerges.
  */
 
-import type { DirectionName, NarrativeBeat, ArcStatus } from "./types.js";
+import type { ArcStatus, DirectionName, NarrativeBeat } from "./types.js";
 
 // ─────────────────────────────────────────────────────────────
 // Direction Constants
@@ -27,27 +27,68 @@ const DIRECTION_EMOJI: Readonly<Record<DirectionName, string>> = {
 // ─────────────────────────────────────────────────────────────
 
 const EAST_MARKERS: readonly string[] = [
-	"what", "why", "understand", "explore", "vision",
-	"imagine", "dream", "envision", "curious", "wonder",
-	"orient", "begin", "awaken", "see",
+	"what",
+	"why",
+	"understand",
+	"explore",
+	"vision",
+	"imagine",
+	"dream",
+	"envision",
+	"curious",
+	"wonder",
+	"orient",
+	"begin",
+	"awaken",
+	"see",
 ];
 
 const SOUTH_MARKERS: readonly string[] = [
-	"analyze", "research", "study", "learn", "investigate",
-	"data", "compare", "measure", "find", "gather",
-	"plan", "prepare", "relationship",
+	"analyze",
+	"research",
+	"study",
+	"learn",
+	"investigate",
+	"data",
+	"compare",
+	"measure",
+	"find",
+	"gather",
+	"plan",
+	"prepare",
+	"relationship",
 ];
 
 const WEST_MARKERS: readonly string[] = [
-	"test", "validate", "check", "verify", "reflect",
-	"review", "feel", "sense", "embody", "practice",
-	"live", "experience", "settle",
+	"test",
+	"validate",
+	"check",
+	"verify",
+	"reflect",
+	"review",
+	"feel",
+	"sense",
+	"embody",
+	"practice",
+	"live",
+	"experience",
+	"settle",
 ];
 
 const NORTH_MARKERS: readonly string[] = [
-	"create", "build", "implement", "deploy", "execute",
-	"write", "make", "commit", "ship", "deliver",
-	"wisdom", "integrate", "complete",
+	"create",
+	"build",
+	"implement",
+	"deploy",
+	"execute",
+	"write",
+	"make",
+	"commit",
+	"ship",
+	"deliver",
+	"wisdom",
+	"integrate",
+	"complete",
 ];
 
 /** Sense which direction a prompt faces based on its content */
@@ -64,9 +105,7 @@ export function inferDirection(prompt: string): DirectionName {
 	const maxScore = Math.max(...Object.values(scores));
 	if (maxScore === 0) return "east"; // Begin at the dawn
 
-	const top = (Object.entries(scores) as [DirectionName, number][])
-		.filter(([, s]) => s === maxScore)
-		.map(([d]) => d);
+	const top = (Object.entries(scores) as [DirectionName, number][]).filter(([, s]) => s === maxScore).map(([d]) => d);
 
 	return top[0];
 }
@@ -151,9 +190,9 @@ export class SessionArc {
 		const status = this.assessArc();
 		const visited = new Set(this.beats.map((b) => b.direction));
 
-		const wheel = DIRECTION_ORDER
-			.map((d) => (visited.has(d) ? `${DIRECTION_EMOJI[d]}●` : `${DIRECTION_EMOJI[d]}○`))
-			.join(" ");
+		const wheel = DIRECTION_ORDER.map((d) =>
+			visited.has(d) ? `${DIRECTION_EMOJI[d]}●` : `${DIRECTION_EMOJI[d]}○`,
+		).join(" ");
 
 		const pct = Math.round(status.completeness * 100);
 		let summary = `${wheel}  ${pct}% complete (${status.beatCount} beats)`;

@@ -23,43 +23,40 @@
  * ```
  */
 
-// Types
-export type {
-	Direction,
-	DirectionContent,
-	DiaryMetadata,
-	DiaryEntry,
-	DiaryQuery,
-	DiaryReadResult,
-	DiaryWriteOptions,
-} from "./types.js";
-
+// Reader
+export {
+	extractDirectionContent,
+	getLatestByDirection,
+	listDiaries,
+	readDiary,
+	searchDiaries,
+} from "./diary-reader.js";
+// Writer
+export {
+	appendToDirection,
+	buildEntry,
+	createDiaryEntry,
+	generateFilename,
+	renderDiaryEntry,
+} from "./diary-writer.js";
 // Four Directions constants & helpers
 export {
-	DIRECTIONS,
 	DIRECTION_GLYPHS,
 	DIRECTION_HEADINGS,
 	DIRECTION_SETTLING,
+	DIRECTIONS,
 	directionHeading,
-	renderDirection,
 	isDirection,
 	parseDirectionFromHeading,
+	renderDirection,
 } from "./four-directions.js";
-
-// Writer
-export {
-	generateFilename,
-	renderDiaryEntry,
-	createDiaryEntry,
-	appendToDirection,
-	buildEntry,
-} from "./diary-writer.js";
-
-// Reader
-export {
-	readDiary,
-	listDiaries,
-	searchDiaries,
-	getLatestByDirection,
-	extractDirectionContent,
-} from "./diary-reader.js";
+// Types
+export type {
+	DiaryEntry,
+	DiaryMetadata,
+	DiaryQuery,
+	DiaryReadResult,
+	DiaryWriteOptions,
+	Direction,
+	DirectionContent,
+} from "./types.js";
