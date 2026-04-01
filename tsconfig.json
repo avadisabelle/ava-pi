@@ -23,7 +23,9 @@
 			"@avadisabelle/ava-pi-web-ui": ["./packages/web-ui/src/index.ts"],
 			"@avadisabelle/ava-pi-web-ui/*": ["./packages/web-ui/src/*"],
 			"@avadisabelle/ava-pi-agent-old": ["./packages/agent-old/src/index.ts"],
-			"@avadisabelle/ava-pi-agent-old/*": ["./packages/agent-old/src/*"]
+			"@avadisabelle/ava-pi-agent-old/*": ["./packages/agent-old/src/*"],
+			"@avadisabelle/ava-pi-trading": ["./packages/trading/src/index.ts"],
+			"@avadisabelle/ava-pi-trading/*": ["./packages/trading/src/*"]
 		}
 	},
 	"include": ["packages/*/src/**/*", "packages/*/test/**/*", "packages/coding-agent/examples/**/*"],
