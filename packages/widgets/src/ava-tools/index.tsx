@@ -19,13 +19,30 @@ import { Type } from "@avadisabelle/ava-pi-ai";
 import type { ExtensionAPI, ExtensionContext } from "@avadisabelle/ava-pi-coding-agent";
 import { Box, Text } from "@avadisabelle/ava-pi-tui";
 import { spawn } from "child_process";
+import { createRequire } from "module";
 import { existsSync, readFileSync, readdirSync } from "fs";
-import { join } from "path";
+import { dirname, join } from "path";
 import { DIRECTIONS, type Direction, CEREMONY_PHASES, type CeremonyPhase } from "../types.js";
 
 // ── Helpers ─────────────────────────────────────────────────────────────────
 
-const MIACO_BIN = join("/a/src/mia-code/miaco/dist/index.js");
+/**
+ * Resolve the miaco binary from the published mia-co npm package.
+ * Falls back to a global `miaco` command if the package is not found locally.
+ */
+function resolveMiacoBin(): string {
+	const require = createRequire(import.meta.url);
+	try {
+		// mia-co package declares bin.miaco -> dist/index.js
+		const pkgPath = require.resolve("mia-co/package.json");
+		return join(dirname(pkgPath), "dist", "index.js");
+	} catch {
+		// Fallback: assume miaco is available globally
+		return "miaco";
+	}
+}
+
+const MIACO_BIN = resolveMiacoBin();
 
 function sessionIdFromCwd(cwd: string): string {
 	const parts = cwd.replace(/\/+$/, "").split("/");
@@ -39,9 +56,13 @@ function sessionIdFromCwd(cwd: string): string {
 
 function runMiaco(args: string[], cwd: string): Promise<{ stdout: string; stderr: string; code: number }> {
 	const sessionId = sessionIdFromCwd(cwd);
-	const fullArgs = [...args, "--session", sessionId];
+	const isChart = args[0] === "chart";
+	const fullArgs = isChart ? [...args, "--session", sessionId] : [...args];
+	const isAbsolutePath = MIACO_BIN.startsWith("/") || MIACO_BIN.includes("\\");
+	const cmd = isAbsolutePath ? "node" : MIACO_BIN;
+	const cmdArgs = isAbsolutePath ? [MIACO_BIN, ...fullArgs] : fullArgs;
 	return new Promise((resolve) => {
-		const child = spawn("node", [MIACO_BIN, ...fullArgs], {
+		const child = spawn(cmd, cmdArgs, {
 			cwd,
 			stdio: ["ignore", "pipe", "pipe"],
 			env: process.env,
@@ -152,6 +173,7 @@ export default function avaTools(pi: ExtensionAPI) {
 				return {
 					content: [{ type: "text", text: `🕯️ PDE gathering failed: ${result.stderr || result.stdout}` }],
 					isError: true,
+					details: undefined,
 				};
 			}
 
@@ -160,6 +182,7 @@ export default function avaTools(pi: ExtensionAPI) {
 				return {
 					content: [{ type: "text", text: `PDE produced unparseable output:\n${result.stdout}` }],
 					isError: true,
+					details: undefined,
 				};
 			}
 
@@ -259,6 +282,7 @@ export default function avaTools(pi: ExtensionAPI) {
 				return {
 					content: [{ type: "text", text: `Chart creation failed: ${result.stderr || result.stdout}` }],
 					isError: true,
+					details: undefined,
 				};
 			}
 
@@ -318,6 +342,7 @@ export default function avaTools(pi: ExtensionAPI) {
 				return {
 					content: [{ type: "text", text: `Add step failed: ${result.stderr || result.stdout}` }],
 					isError: true,
+					details: undefined,
 				};
 			}
 
@@ -346,6 +371,7 @@ export default function avaTools(pi: ExtensionAPI) {
 				return {
 					content: [{ type: "text", text: `Complete step failed: ${result.stderr || result.stdout}` }],
 					isError: true,
+					details: undefined,
 				};
 			}
 
@@ -376,6 +402,7 @@ export default function avaTools(pi: ExtensionAPI) {
 				return {
 					content: [{ type: "text", text: `Review failed: ${result.stderr || result.stdout}` }],
 					isError: true,
+					details: undefined,
 				};
 			}
 
@@ -416,12 +443,13 @@ export default function avaTools(pi: ExtensionAPI) {
 				return {
 					content: [{ type: "text", text: `List failed: ${result.stderr || result.stdout}` }],
 					isError: true,
+					details: undefined,
 				};
 			}
 
 			const charts = parsed.charts || [];
 			if (charts.length === 0) {
-				return { content: [{ type: "text", text: "No active charts. The space is open for new creative tension." }] };
+				return { content: [{ type: "text", text: "No active charts. The space is open for new creative tension." }], details: undefined };
 			}
 
 			const text = charts
