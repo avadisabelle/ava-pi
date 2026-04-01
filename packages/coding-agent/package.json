@@ -1,6 +1,6 @@
 {
 	"name": "@avadisabelle/ava-pi-coding-agent",
-	"version": "0.63.0",
+	"version": "0.63.1",
 	"description": "Coding agent CLI with read, bash, edit, write tools and session management",
 	"type": "module",
 	"piConfig": {
@@ -40,9 +40,9 @@
 	},
 	"dependencies": {
 		"@mariozechner/jiti": "^2.6.2",
-		"@avadisabelle/ava-pi-agent-core": "^0.63.0",
-		"@avadisabelle/ava-pi-ai": "^0.63.0",
-		"@avadisabelle/ava-pi-tui": "^0.63.0",
+		"@avadisabelle/ava-pi-agent-core": "^0.63.1",
+		"@avadisabelle/ava-pi-ai": "^0.63.1",
+		"@avadisabelle/ava-pi-tui": "^0.63.1",
 		"@silvia-odwyer/photon-node": "^0.3.4",
 		"chalk": "^5.5.0",
 		"cli-highlight": "^2.1.11",
