@@ -1,0 +1,50 @@
+{
+	"name": "@avadisabelle/ava-pi-trading",
+	"version": "0.63.0",
+	"description": "Williams 5D trading types, ARIANE trade gate protocol, and garden metaphor for the Ava ecosystem",
+	"type": "module",
+	"main": "./dist/index.js",
+	"types": "./dist/index.d.ts",
+	"exports": {
+		".": {
+			"types": "./dist/index.d.ts",
+			"import": "./dist/index.js"
+		}
+	},
+	"files": ["dist", "README.md"],
+	"scripts": {
+		"clean": "shx rm -rf dist",
+		"build": "tsgo -p tsconfig.json",
+		"dev": "tsgo -p tsconfig.json --watch --preserveWatchOutput",
+		"test": "vitest --run",
+		"prepublishOnly": "npm run clean && npm run build"
+	},
+	"keywords": [
+		"trading",
+		"williams-5d",
+		"ariane",
+		"trade-gate",
+		"fdb",
+		"alligator",
+		"garden",
+		"ava"
+	],
+	"author": "Guillaume JG Isabelle",
+	"license": "MIT",
+	"repository": {
+		"type": "git",
+		"url": "git+https://github.com/avadisabelle/ava-pi.git",
+		"directory": "packages/trading"
+	},
+	"dependencies": {
+		"@avadisabelle/ava-council": "^0.63.0"
+	},
+	"devDependencies": {
+		"@types/node": "^22.10.5",
+		"typescript": "^5.9.2",
+		"vitest": "^3.2.4"
+	},
+	"engines": {
+		"node": ">=20.0.0"
+	}
+}
