@@ -46,6 +46,15 @@ if (versions.size > 1) {
 
 console.log('\n✅ All packages at same version (lockstep)');
 
+// Also sync root package.json if it has @avadisabelle/* deps
+const rootPkgPath = join(process.cwd(), 'package.json');
+try {
+	const rootPkg = JSON.parse(readFileSync(rootPkgPath, 'utf8'));
+	packages['__root__'] = { path: rootPkgPath, data: rootPkg };
+} catch (e) {
+	console.error(`Failed to read root package.json:`, e.message);
+}
+
 // Update all inter-package dependencies
 let totalUpdates = 0;
 for (const [dir, pkg] of Object.entries(packages)) {

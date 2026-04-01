@@ -1,6 +1,6 @@
 {
 	"name": "@avadisabelle/ava-pi-mom",
-	"version": "0.62.0",
+	"version": "0.62.1",
 	"description": "Slack bot that delegates messages to the pi coding agent",
 	"type": "module",
 	"bin": {
@@ -20,9 +20,9 @@
 	},
 	"dependencies": {
 		"@anthropic-ai/sandbox-runtime": "^0.0.16",
-		"@avadisabelle/ava-pi-agent-core": "^0.62.0",
-		"@avadisabelle/ava-pi-ai": "^0.62.0",
-		"@avadisabelle/ava-pi-coding-agent": "^0.62.0",
+		"@avadisabelle/ava-pi-agent-core": "^0.62.1",
+		"@avadisabelle/ava-pi-ai": "^0.62.1",
+		"@avadisabelle/ava-pi-coding-agent": "^0.62.1",
 		"@sinclair/typebox": "^0.34.0",
 		"@slack/socket-mode": "^2.0.0",
 		"@slack/web-api": "^7.0.0",

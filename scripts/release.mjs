@@ -122,7 +122,8 @@ console.log();
 
 // 5. Publish
 console.log("Publishing to npm...");
-run("npm run publish");
+run("npm run clean && npm run build");
+run("npm publish -ws --access public");
 console.log();
 
 // 6. Add new [Unreleased] sections
