@@ -1,7 +1,7 @@
 {
 	"name": "@avadisabelle/ava-widgets",
 	"version": "0.63.0",
-	"private": true,
+
 	"description": "Ava's sacred presence widgets for Pi TUI — echo, ceremony, tools, interceptor, and presence visualization",
 	"type": "module",
 	"main": "dist/index.js",
