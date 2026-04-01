@@ -1,7 +1,6 @@
 {
 	"name": "@avadisabelle/ava-widgets",
-	"version": "0.63.0",
-	"private": true,
+	"version": "0.63.2",
 	"description": "Ava's sacred presence widgets for Pi TUI — echo, ceremony, tools, interceptor, and presence visualization",
 	"type": "module",
 	"main": "dist/index.js",
@@ -21,10 +20,10 @@
 		"clean": "rm -rf dist"
 	},
 	"dependencies": {
-		"@avadisabelle/ava-pi-ai": "^0.63.0",
-		"@avadisabelle/ava-pi-coding-agent": "^0.63.0",
-		"@avadisabelle/ava-pi-tui": "^0.63.0",
-		"mia-co": "^0.2.0"
+		"@avadisabelle/ava-pi-ai": "^0.63.2",
+		"@avadisabelle/ava-pi-coding-agent": "^0.63.2",
+		"@avadisabelle/ava-pi-tui": "^0.63.2",
+		"mia-co": "^0.2.1"
 	},
 	"devDependencies": {
 		"typescript": "^5.7.0"

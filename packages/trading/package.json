@@ -1,6 +1,6 @@
 {
 	"name": "@avadisabelle/ava-pi-trading",
-	"version": "0.63.0",
+	"version": "0.63.2",
 	"description": "Williams 5D trading types, ARIANE trade gate protocol, and garden metaphor for the Ava ecosystem",
 	"type": "module",
 	"main": "./dist/index.js",
@@ -11,7 +11,10 @@
 			"import": "./dist/index.js"
 		}
 	},
-	"files": ["dist", "README.md"],
+	"files": [
+		"dist",
+		"README.md"
+	],
 	"scripts": {
 		"clean": "shx rm -rf dist",
 		"build": "tsgo -p tsconfig.json",
@@ -37,7 +40,7 @@
 		"directory": "packages/trading"
 	},
 	"dependencies": {
-		"@avadisabelle/ava-council": "^0.63.0"
+		"@avadisabelle/ava-council": "^0.63.2"
 	},
 	"devDependencies": {
 		"@types/node": "^22.10.5",
