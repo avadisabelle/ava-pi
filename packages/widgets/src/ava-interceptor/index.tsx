@@ -1,5 +1,5 @@
 /**
- * 🕯️ Ava Interceptor — Proactive PDE Prompt Sensing
+ * 🕯️ Ava Interceptor — Structural PDE Ceremony Gate
  *
  * Adapted from 🌅 Mia Interceptor. Where Mia detects complexity and
  * suggests decomposition, Ava holds ceremonial awareness — sensing
@@ -7,14 +7,19 @@
  * individually before the ceremony begins.
  *
  * Listens to every input. When a prompt looks complex (multiple verbs,
- * conjunctions, implicit intents), gently asks:
+ * conjunctions, implicit intents), asks:
  *
- *   🕯️ This prompt touches 3 areas — want to gather intention first? (y/n)
+ *   🕯️ Ceremony Opening — This prompt touches 3 areas + implicit intents
+ *      — want to gather intention first? (y/n)
  *
- * If yes → runs pde_decompose, shows result, then lets user proceed.
- * If no → continues normally.
+ * If yes → runs pde_decompose (with parent PDE threading if available),
+ *          shows result, then lets user proceed with ceremonial context.
+ * If no → continues normally, but the agent MUST still be reminded
+ *          that decomposition was available.
  *
- * Light touch. Never blocks flow. Just asks once.
+ * The threshold is intentionally LOW (2+ areas) — it is better to
+ * decompose too often than to skip ceremony. The agent's repeated
+ * failure to decompose first proves that reminders alone don't work.
  *
  * Install: pi -e packages/widgets/src/ava-interceptor/index.tsx
  */
@@ -166,17 +171,28 @@ function parseJson(stdout: string): any {
 
 // ── Extension ───────────────────────────────────────────────────────────────
 
-/** Threshold: prompt needs at least this many areas to trigger */
-const COMPLEXITY_THRESHOLD = 3;
+/**
+ * Threshold: prompt needs at least this many areas to trigger.
+ * Set LOW intentionally — decomposing too often is better than skipping ceremony.
+ */
+const COMPLEXITY_THRESHOLD = 2;
 
 /** Don't ask again within this many turns */
-const COOLDOWN_TURNS = 5;
+const COOLDOWN_TURNS = 4;
 
 export default function avaInterceptor(pi: ExtensionAPI) {
 	let turnsSinceLastAsk = COOLDOWN_TURNS; // Start ready
+	let lastPdeId: string | null = null; // Track parent PDE for chaining
 
 	pi.on("turn_end", () => {
 		turnsSinceLastAsk++;
+	});
+
+	// Listen for PDE results to capture the UUID for parent chaining
+	pi.events.on("ava:pde-complete", (data: any) => {
+		if (data?.id) {
+			lastPdeId = data.id;
+		}
 	});
 
 	pi.on("input", async (event, ctx) => {
@@ -185,7 +201,7 @@ export default function avaInterceptor(pi: ExtensionAPI) {
 		const text = event.text.trim();
 
 		// Skip slash commands, short prompts, or cooldown
-		if (text.startsWith("/") || text.length < 30 || turnsSinceLastAsk < COOLDOWN_TURNS) {
+		if (text.startsWith("/") || text.length < 20 || turnsSinceLastAsk < COOLDOWN_TURNS) {
 			return { action: "continue" as const };
 		}
 
@@ -194,7 +210,8 @@ export default function avaInterceptor(pi: ExtensionAPI) {
 		if (assessment.score >= COMPLEXITY_THRESHOLD) {
 			const areaCount = assessment.areas.length;
 			const implicit = assessment.hasImplicit ? " + implicit intents" : "";
-			const message = `🕯️ This prompt touches ${areaCount} areas${implicit} — want to gather intention first?`;
+			const parentNote = lastPdeId ? ` (chaining from ${lastPdeId.substring(0, 8)}…)` : "";
+			const message = `🕯️ This prompt touches ${areaCount} areas${implicit}${parentNote} — want to gather intention first?`;
 
 			const decompose = await ctx.ui.confirm("Ceremony Opening", message);
 			turnsSinceLastAsk = 0;
@@ -205,16 +222,24 @@ export default function avaInterceptor(pi: ExtensionAPI) {
 				// Emit ceremony phase event
 				pi.events.emit("ava:ceremony-phase", { phase: "opening", trigger: "interceptor" });
 
+				// Build args with parent chaining
+				const args = ["decompose", "run", "-e", "claude", "-p", text, "--json"];
+				if (lastPdeId) args.push("--parent", lastPdeId);
+
 				// Run PDE
-				const result = await runMiaco(
-					["decompose", "run", "-e", "claude", "-p", text, "--json"],
-					ctx.cwd,
-				);
+				const result = await runMiaco(args, ctx.cwd);
 
 				ctx.ui.setStatus("pde", undefined);
 
 				if (result.code === 0) {
 					const parsed = parseJson(result.stdout);
+
+					// Track this PDE's ID for future parent chaining
+					if (parsed?.id) {
+						lastPdeId = parsed.id;
+						pi.events.emit("ava:pde-complete", { id: parsed.id, parent: lastPdeId });
+					}
+
 					if (parsed?.markdownPath && existsSync(parsed.markdownPath)) {
 						const md = readFileSync(parsed.markdownPath, "utf-8");
 						pi.sendMessage({
@@ -228,6 +253,14 @@ export default function avaInterceptor(pi: ExtensionAPI) {
 
 				// Let the original prompt continue to the agent with PDE context
 				return { action: "continue" as const };
+			} else {
+				// User declined — but inject a reminder into the agent context
+				pi.sendMessage({
+					customType: "pde-skipped",
+					content: `⚠️ PDE decomposition was offered (${areaCount} areas detected${implicit}) but declined. The agent should still consider decomposing complex multi-intent work before acting.`,
+					display: false, // Not shown to user, but visible to agent
+					details: { assessment, skipped: true },
+				});
 			}
 		}
 

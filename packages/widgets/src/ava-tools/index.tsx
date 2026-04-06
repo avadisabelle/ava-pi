@@ -20,7 +20,7 @@ import type { ExtensionAPI, ExtensionContext } from "@avadisabelle/ava-pi-coding
 import { Box, Text } from "@avadisabelle/ava-pi-tui";
 import { spawn } from "child_process";
 import { createRequire } from "module";
-import { existsSync, readFileSync, readdirSync } from "fs";
+import { existsSync, readFileSync, readdirSync, statSync } from "fs";
 import { dirname, join } from "path";
 import { DIRECTIONS, type Direction, CEREMONY_PHASES, type CeremonyPhase } from "../types.js";
 
@@ -84,22 +84,44 @@ function parseJson(stdout: string): any {
 	}
 }
 
+/**
+ * List PDE decompositions from .pde/ directory.
+ * Supports both formats:
+ *   - v2.1 folder: .pde/<yyMMddHHmm>--<uuid>/pde-<uuid>.json
+ *   - legacy flat:  .pde/<uuid>.json
+ */
 function listPdeFiles(cwd: string): any[] {
 	const dir = join(cwd, ".pde");
 	if (!existsSync(dir)) return [];
-	return readdirSync(dir)
-		.filter((f) => f.endsWith(".json"))
-		.sort()
-		.reverse()
-		.slice(0, 10)
-		.map((f) => {
-			try {
-				return JSON.parse(readFileSync(join(dir, f), "utf-8"));
-			} catch {
-				return null;
+
+	const results: any[] = [];
+
+	for (const entry of readdirSync(dir)) {
+		const fullPath = join(dir, entry);
+		try {
+			const stat = statSync(fullPath);
+
+			if (stat.isDirectory()) {
+				// v2.1 folder format: look for pde-<uuid>.json inside
+				for (const child of readdirSync(fullPath)) {
+					if (child.startsWith("pde-") && child.endsWith(".json")) {
+						const parsed = JSON.parse(readFileSync(join(fullPath, child), "utf-8"));
+						results.push(parsed);
+					}
+				}
+			} else if (entry.endsWith(".json")) {
+				// Legacy flat format
+				const parsed = JSON.parse(readFileSync(fullPath, "utf-8"));
+				results.push(parsed);
 			}
-		})
-		.filter(Boolean);
+		} catch {
+			// Skip malformed entries
+		}
+	}
+
+	// Sort by timestamp descending, limit to 10
+	results.sort((a, b) => (b.timestamp || "").localeCompare(a.timestamp || ""));
+	return results.slice(0, 10);
 }
 
 // ── Ceremony-Aware Direction Mapping ────────────────────────────────────────
@@ -123,6 +145,14 @@ function ceremonialToolLabel(toolName: string): string {
 // ── Extension Entry Point ───────────────────────────────────────────────────
 
 export default function avaTools(pi: ExtensionAPI) {
+	// Track last PDE ID for parent chaining across tools
+	let lastPdeId: string | null = null;
+
+	// Listen for PDE completions from interceptor or direct tool calls
+	pi.events.on("ava:pde-complete", (data: any) => {
+		if (data?.id) lastPdeId = data.id;
+	});
+
 	// Emit ceremony phase hints when tools execute
 	pi.on("tool_execution_start", (event, ctx) => {
 		const mapping = TOOL_CEREMONY_MAP[event.toolName];
@@ -186,6 +216,12 @@ export default function avaTools(pi: ExtensionAPI) {
 					isError: true,
 					details: undefined,
 				};
+			}
+
+			// Track PDE ID for parent chaining
+			if (parsed.id) {
+				lastPdeId = parsed.id;
+				pi.events.emit("ava:pde-complete", { id: parsed.id, parent: params.parent || null });
 			}
 
 			const mdPath = parsed.markdownPath;
