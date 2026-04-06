@@ -160,14 +160,16 @@ export default function avaTools(pi: ExtensionAPI) {
 					description: "LLM engine for decomposition (default: claude)",
 				}),
 			),
+			parent: Type.Optional(
+				Type.String({ description: "Parent PDE UUID for nesting child decompositions under a parent" }),
+			),
 		}),
 
 		async execute(_toolCallId, params, _signal, _onUpdate, ctx) {
 			const engine = params.engine || "claude";
-			const result = await runMiaco(
-				["decompose", "run", "-e", engine, "-p", params.prompt, "--json"],
-				ctx.cwd,
-			);
+			const args = ["decompose", "run", "-e", engine, "-p", params.prompt, "--json"];
+			if (params.parent) args.push("--parent", params.parent);
+			const result = await runMiaco(args, ctx.cwd);
 
 			if (result.code !== 0) {
 				return {
@@ -491,7 +493,18 @@ export default function avaTools(pi: ExtensionAPI) {
 			// Emit ceremony phase event
 			pi.events.emit("ava:ceremony-phase", { phase: "opening", trigger: "pde" });
 
-			const result = await runMiaco(["decompose", "run", "-e", "claude", "-p", prompt, "--json"], ctx.cwd);
+			// Parse optional --parent flag: /pde --parent <uuid> <prompt>
+			let parentUuid: string | undefined;
+			let pdePrompt = prompt;
+			const parentMatch = prompt.match(/^--parent\s+(\S+)\s+(.+)$/s);
+			if (parentMatch) {
+				parentUuid = parentMatch[1];
+				pdePrompt = parentMatch[2];
+			}
+
+			const pdeArgs = ["decompose", "run", "-e", "claude", "-p", pdePrompt, "--json"];
+			if (parentUuid) pdeArgs.push("--parent", parentUuid);
+			const result = await runMiaco(pdeArgs, ctx.cwd);
 			ctx.ui.setStatus("pde", undefined);
 
 			if (result.code !== 0) {

@@ -137,16 +137,6 @@ function assessComplexity(text: string): ComplexityAssessment {
 
 // ── Helpers ─────────────────────────────────────────────────────────────────
 
-function stableSessionId(cwd: string): string {
-	const parts = cwd.replace(/\/+$/, "").split("/");
-	const slug = parts.slice(-2).join("_").replace(/[^a-zA-Z0-9_-]/g, "");
-	let hash = 0;
-	for (let i = 0; i < cwd.length; i++) {
-		hash = ((hash << 5) - hash + cwd.charCodeAt(i)) | 0;
-	}
-	return `ava_${slug}_${Math.abs(hash).toString(36)}`;
-}
-
 function runMiaco(args: string[], cwd: string): Promise<{ stdout: string; stderr: string; code: number }> {
 	const isAbsolutePath = MIACO_BIN.startsWith("/") || MIACO_BIN.includes("\\");
 	const cmd = isAbsolutePath ? "node" : MIACO_BIN;
@@ -216,9 +206,8 @@ export default function avaInterceptor(pi: ExtensionAPI) {
 				pi.events.emit("ava:ceremony-phase", { phase: "opening", trigger: "interceptor" });
 
 				// Run PDE
-				const sessionId = stableSessionId(ctx.cwd);
 				const result = await runMiaco(
-					["decompose", "run", "-e", "claude", "-p", text, "--session", sessionId, "--json"],
+					["decompose", "run", "-e", "claude", "-p", text, "--json"],
 					ctx.cwd,
 				);
 
