@@ -1,0 +1,219 @@
+{
+  "id": "135ab60d-50cb-4f6f-af9d-6d883cfddbc0",
+  "timestamp": "2026-04-17T11:34:41.416Z",
+  "engine": "claude",
+  "prompt": "Create a GitHub issue for the Ava widget/TUI space optimization work, commit only the widget files already changed with the issue ID in the commit message, then investigate and optimize the remaining Ava Presence lines 'Anti-Helpful Helper │ professional' and fleet status that consume two rows of terminal space without much value.",
+  "result": {
+    "primary": {
+      "action": "create",
+      "target": "GitHub issue for Ava widget/TUI space optimization",
+      "urgency": "immediate",
+      "confidence": 0.95
+    },
+    "secondary": [
+      {
+        "action": "commit",
+        "target": "already-changed widget files",
+        "implicit": false,
+        "dependency": "GitHub issue created (need issue ID)",
+        "confidence": 0.95
+      },
+      {
+        "action": "investigate",
+        "target": "Ava Presence lines consuming two rows (Anti-Helpful Helper + fleet status)",
+        "implicit": false,
+        "dependency": "commit completed",
+        "confidence": 0.9
+      },
+      {
+        "action": "optimize",
+        "target": "Anti-Helpful Helper │ professional line and fleet status row",
+        "implicit": true,
+        "dependency": "investigation complete",
+        "confidence": 0.85
+      },
+      {
+        "action": "identify",
+        "target": "which widget files have already been changed",
+        "implicit": true,
+        "dependency": null,
+        "confidence": 0.88
+      },
+      {
+        "action": "include",
+        "target": "issue ID in commit message",
+        "implicit": false,
+        "dependency": "GitHub issue created",
+        "confidence": 0.97
+      }
+    ],
+    "context": {
+      "files_needed": [
+        "packages/widgets/src/ava-presence/index.tsx",
+        "packages/widgets/src/ava-ceremony/index.tsx",
+        "packages/widgets/src/ava-echo/index.tsx",
+        "packages/widgets/src/ava-interceptor/index.tsx",
+        "packages/widgets/src/ava-tools/index.tsx",
+        "packages/widgets/src/types.ts"
+      ],
+      "tools_required": [
+        "git diff --name-only",
+        "git status",
+        "gh issue create",
+        "git add (specific files only)",
+        "git commit"
+      ],
+      "assumptions": [
+        "Some widget files have already been modified and are staged or unstaged",
+        "The GitHub issue does not yet exist",
+        "The Anti-Helpful Helper line and fleet status are rendered by ava-presence widget",
+        "Two rows is considered too much vertical space for this information",
+        "The optimization direction (collapse to one row, remove, or condense) is unspecified"
+      ]
+    },
+    "outputs": {
+      "artifacts": [],
+      "updates": [
+        "packages/widgets/src/ava-presence/index.tsx (optimization target)",
+        "possibly packages/widgets/src/types.ts"
+      ],
+      "communications": [
+        "GitHub issue: avadisabelle/ava-pi — Ava widget/TUI space optimization",
+        "git commit referencing issue ID"
+      ]
+    },
+    "directions": {
+      "east": [
+        {
+          "text": "Define desired TUI layout: one row vs two rows for presence/fleet info",
+          "confidence": 0.8,
+          "implicit": true
+        },
+        {
+          "text": "Clarify value threshold: what information is worth showing in the status area",
+          "confidence": 0.75,
+          "implicit": true
+        }
+      ],
+      "south": [
+        {
+          "text": "Identify which widget files are already changed via git status/diff",
+          "confidence": 0.95,
+          "implicit": true
+        },
+        {
+          "text": "Locate Anti-Helpful Helper and fleet status rendering in ava-presence widget",
+          "confidence": 0.9,
+          "implicit": false
+        },
+        {
+          "text": "Assess how many terminal rows current presence widget occupies",
+          "confidence": 0.88,
+          "implicit": false
+        }
+      ],
+      "west": [
+        {
+          "text": "Verify commit only includes already-changed widget files, not unrelated changes",
+          "confidence": 0.95,
+          "implicit": false
+        },
+        {
+          "text": "Confirm issue ID is correctly referenced in commit message",
+          "confidence": 0.97,
+          "implicit": false
+        },
+        {
+          "text": "Validate optimized widget still renders correctly after row reduction",
+          "confidence": 0.8,
+          "implicit": true
+        }
+      ],
+      "north": [
+        {
+          "text": "Create GitHub issue with scope: TUI space optimization for Ava presence widgets",
+          "confidence": 0.95,
+          "implicit": false
+        },
+        {
+          "text": "Stage and commit only already-changed widget files with issue ID in message",
+          "confidence": 0.95,
+          "implicit": false
+        },
+        {
+          "text": "Implement optimization: collapse Anti-Helpful Helper + fleet status to single row or remove low-value display",
+          "confidence": 0.82,
+          "implicit": false
+        }
+      ]
+    },
+    "actionStack": [
+      {
+        "text": "Run git status and git diff to identify already-changed widget files",
+        "direction": "south",
+        "dependency": null,
+        "completed": false
+      },
+      {
+        "text": "Create GitHub issue: Ava widget/TUI space optimization (Anti-Helpful Helper + fleet row reduction)",
+        "direction": "north",
+        "dependency": null,
+        "completed": false
+      },
+      {
+        "text": "Stage only already-changed widget files (never git add -A)",
+        "direction": "north",
+        "dependency": "GitHub issue created",
+        "completed": false
+      },
+      {
+        "text": "Commit with message referencing issue ID",
+        "direction": "north",
+        "dependency": "files staged",
+        "completed": false
+      },
+      {
+        "text": "Locate Anti-Helpful Helper and fleet status rendering in ava-presence source",
+        "direction": "south",
+        "dependency": "commit completed",
+        "completed": false
+      },
+      {
+        "text": "Assess row consumption and determine optimization strategy (collapse/remove/condense)",
+        "direction": "east",
+        "dependency": "source located",
+        "completed": false
+      },
+      {
+        "text": "Implement TUI space optimization in ava-presence widget",
+        "direction": "north",
+        "dependency": "strategy determined",
+        "completed": false
+      },
+      {
+        "text": "Verify rendering after optimization",
+        "direction": "west",
+        "dependency": "optimization implemented",
+        "completed": false
+      }
+    ],
+    "ambiguities": [
+      {
+        "text": "Optimization direction unspecified: collapse two rows into one, remove entirely, or make conditional?",
+        "suggestion": "Specify whether Anti-Helpful Helper and fleet lines should be merged into one row, hidden by default, or removed"
+      },
+      {
+        "text": "'without much value' is subjective — unclear if both lines should be removed or just condensed",
+        "suggestion": "Confirm whether fleet status (💜 ○ 🏗️ ○ 🌸) has any retained value or should be dropped entirely"
+      },
+      {
+        "text": "'already changed' widget files — exact set unknown until git status is run",
+        "suggestion": "Run git status first to confirm which files qualify before committing"
+      }
+    ]
+  },
+  "options": {
+    "extractImplicit": true,
+    "mapDependencies": true
+  }
+}
