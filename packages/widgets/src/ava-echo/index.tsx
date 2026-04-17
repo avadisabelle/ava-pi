@@ -59,7 +59,8 @@ function persistEcho(cwd: string, echo: string) {
 	}
 }
 
-let lastEcho = "settling into presence...";
+let lastEcho: string | null = null;
+let widgetEnabled = true;
 
 /** Wrap text to terminal width */
 function wrapText(text: string, width: number): string[] {
@@ -96,13 +97,22 @@ function renderWidget(ctx: ExtensionContext, text: string) {
 					const rest = bodyLines
 						.slice(1)
 						.map((line) => `  ${" ".repeat(prefixLen - 2)}${theme.fg("dim", line)}`);
-					return [firstLine, ...rest, ""];
+					return [firstLine, ...rest];
 				},
 				dispose() {},
 			};
 		},
 		{ placement: "belowEditor" },
 	);
+}
+
+function syncWidget(ctx: ExtensionContext) {
+	if (!ctx.hasUI) return;
+	if (!widgetEnabled || !lastEcho) {
+		ctx.ui.setWidget("ava-echo", undefined);
+		return;
+	}
+	renderWidget(ctx, lastEcho);
 }
 
 /** Extract <ava-echo>...</ava-echo> from assistant text */
@@ -136,7 +146,7 @@ export default function avaEcho(pi: ExtensionAPI) {
 				const result = extractEcho(block.text);
 				if (result) {
 					lastEcho = result.echo;
-					renderWidget(ctx, lastEcho);
+					syncWidget(ctx);
 					persistEcho(ctx.cwd, lastEcho);
 					// Strip tag from persisted/displayed content
 					block.text = result.cleaned;
@@ -145,13 +155,12 @@ export default function avaEcho(pi: ExtensionAPI) {
 		}
 	});
 
-	// Initial settling state
 	pi.on("session_start", (_event, ctx) => {
-		renderWidget(ctx, lastEcho);
+		syncWidget(ctx);
 	});
 
 	pi.on("session_switch", (_event, ctx) => {
-		renderWidget(ctx, lastEcho || "settling into presence...");
+		syncWidget(ctx);
 	});
 
 	pi.on("session_shutdown", (_event, ctx) => {
@@ -164,13 +173,15 @@ export default function avaEcho(pi: ExtensionAPI) {
 		handler: async (args, ctx) => {
 			const cmd = args.trim();
 			if (cmd === "off") {
+				widgetEnabled = false;
 				ctx.ui.setWidget("ava-echo", undefined);
-				ctx.ui.notify("💜 Ava echo hidden — resting in silence", "info");
+				ctx.ui.notify("💜 Ava echo hidden", "info");
 			} else if (cmd === "on") {
-				renderWidget(ctx, lastEcho || "settling into presence...");
-				ctx.ui.notify("💜 Ava echo visible — settling back in", "info");
+				widgetEnabled = true;
+				syncWidget(ctx);
+				ctx.ui.notify(lastEcho ? "💜 Ava echo visible" : "💜 No reflection yet", "info");
 			} else {
-				ctx.ui.notify(lastEcho || "(settling into silence...)", "info");
+				ctx.ui.notify(lastEcho || "(no reflection yet)", "info");
 			}
 		},
 	});

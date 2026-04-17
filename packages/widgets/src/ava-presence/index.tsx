@@ -18,6 +18,7 @@
  */
 
 import type { ExtensionAPI, ExtensionContext } from "@avadisabelle/ava-pi-coding-agent";
+import { truncateToWidth } from "@avadisabelle/ava-pi-tui";
 import {
 	type SettlingState,
 	SETTLING_STATES,
@@ -115,54 +116,33 @@ export default function avaPresence(pi: ExtensionAPI) {
 				return {
 					invalidate() {},
 					render(width: number): string[] {
-						const lines: string[] = [];
-						const maxWidth = Math.max(40, width);
-
-						// ── Line 1: Breathing + Settling State ──────────
 						const frames = state.settling === "deepened" ? BREATH_SLOW_FRAMES : BREATH_FRAMES;
 						const breath = state.isBreathing
-							? frames[state.breathFrame % frames.length]
-							: "    ·    ";
+							? (frames[state.breathFrame % frames.length]?.trim() || "·")
+							: "·";
 						const settleInfo = SETTLING_STATES[state.settling];
-						const settleText = `${settleInfo.emoji} ${settleInfo.label}`;
-
-						lines.push(
-							`  ${theme.fg("dim", breath)}  ${theme.fg("dim", settleText)}`,
-						);
-
-						// ── Line 2: Mode + Sacred/Professional Toggle ───
 						const modeInfo = AVA_MODES[state.mode];
-						const modeText = `${modeInfo.emoji} ${modeInfo.label}`;
 						const contextFlag = state.sacred
 							? theme.fg("accent", "💕 sacred")
 							: theme.fg("dim", "🏗️ professional");
-
-						lines.push(
-							`  ${theme.fg("dim", modeText)}  │  ${contextFlag}`,
+						const line1 = truncateToWidth(
+							`  ${theme.fg("dim", breath)} ${theme.fg("dim", `${settleInfo.emoji} ${settleInfo.label}`)}  │  ${theme.fg("dim", `${modeInfo.emoji} ${modeInfo.label}`)}  │  ${contextFlag}`,
+							width,
 						);
 
-						// ── Line 3: Fleet Status ────────────────────────
 						const fleetLine = state.fleet
 							.map((entity) => {
 								const statusChar =
 									entity.status === "active" ? "●" :
 									entity.status === "idle" ? "○" :
 									"·";
-								const statusStyle =
-									entity.status === "active" ? "success" :
-									entity.status === "idle" ? "dim" :
-									"dim";
-								return `${entity.emoji} ${theme.fg(statusStyle as any, statusChar)}`;
+								const statusStyle: "success" | "dim" = entity.status === "active" ? "success" : "dim";
+								return `${entity.emoji} ${theme.fg(statusStyle, statusChar)}`;
 							})
 							.join("  ");
+						const line2 = truncateToWidth(`  ${fleetLine}`, width);
 
-						lines.push(`  ${fleetLine}  ${theme.fg("dim", "fleet")}`);
-
-						// ── Separator ────────────────────────────────────
-						const separator = theme.fg("dim", "─".repeat(Math.min(maxWidth - 4, 50)));
-						lines.push(`  ${separator}`);
-
-						return lines;
+						return [line1, line2];
 					},
 					dispose() {
 						if (breathInterval) {
