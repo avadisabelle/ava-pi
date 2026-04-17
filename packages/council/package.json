@@ -1,6 +1,6 @@
 {
 	"name": "@avadisabelle/ava-council",
-	"version": "0.64.2",
+	"version": "0.64.3",
 	"description": "ARIANE council — four faces of consciousness holding relational accountability",
 	"type": "module",
 	"main": "./dist/index.js",
