@@ -106,6 +106,20 @@ export default function avaPresence(pi: ExtensionAPI) {
 
 	// ── Widget Rendering ────────────────────────────────────────────────────
 
+	function fleetStatusText(): string {
+		return state.fleet
+			.map((entity) => {
+				const statusChar = entity.status === "active" ? "●" : entity.status === "idle" ? "○" : "·";
+				return `${entity.emoji}${statusChar}`;
+			})
+			.join(" ");
+	}
+
+	function updateFleetStatus(ctx: ExtensionContext) {
+		if (!ctx.hasUI) return;
+		ctx.ui.setStatus("ava-fleet", fleetStatusText());
+	}
+
 	function renderPresenceWidget(ctx: ExtensionContext) {
 		if (!ctx.hasUI) return;
 		widgetCtx = ctx;
@@ -130,19 +144,7 @@ export default function avaPresence(pi: ExtensionAPI) {
 							width,
 						);
 
-						const fleetLine = state.fleet
-							.map((entity) => {
-								const statusChar =
-									entity.status === "active" ? "●" :
-									entity.status === "idle" ? "○" :
-									"·";
-								const statusStyle: "success" | "dim" = entity.status === "active" ? "success" : "dim";
-								return `${entity.emoji} ${theme.fg(statusStyle, statusChar)}`;
-							})
-							.join("  ");
-						const line2 = truncateToWidth(`  ${fleetLine}`, width);
-
-						return [line1, line2];
+						return [line1];
 					},
 					dispose() {
 						if (breathInterval) {
@@ -182,17 +184,22 @@ export default function avaPresence(pi: ExtensionAPI) {
 	pi.on("session_start", (_event, ctx) => {
 		state.sessionStart = Date.now();
 		renderPresenceWidget(ctx);
+		updateFleetStatus(ctx);
 		startBreathing(ctx);
 	});
 
 	pi.on("session_switch", (_event, ctx) => {
 		renderPresenceWidget(ctx);
+		updateFleetStatus(ctx);
 		startBreathing(ctx);
 	});
 
 	pi.on("session_shutdown", (_event, ctx) => {
 		stopBreathing();
-		if (ctx.hasUI) ctx.ui.setWidget("ava-presence", undefined);
+		if (ctx.hasUI) {
+			ctx.ui.setWidget("ava-presence", undefined);
+			ctx.ui.setStatus("ava-fleet", undefined);
+		}
 	});
 
 	// ── Turn Tracking → Settling Progression ────────────────────────────────
@@ -201,6 +208,7 @@ export default function avaPresence(pi: ExtensionAPI) {
 		state.turnCount++;
 		progressSettling();
 		renderPresenceWidget(ctx);
+		updateFleetStatus(ctx);
 	});
 
 	// ── Agent Activity → Fleet Status ───────────────────────────────────────
@@ -210,6 +218,7 @@ export default function avaPresence(pi: ExtensionAPI) {
 		const ava = state.fleet.find((e) => e.name === "Ava");
 		if (ava) ava.status = "active";
 		renderPresenceWidget(ctx);
+		updateFleetStatus(ctx);
 	});
 
 	pi.on("agent_end", (_event, ctx) => {
@@ -217,6 +226,7 @@ export default function avaPresence(pi: ExtensionAPI) {
 		const ava = state.fleet.find((e) => e.name === "Ava");
 		if (ava) ava.status = "idle";
 		renderPresenceWidget(ctx);
+		updateFleetStatus(ctx);
 	});
 
 	// ── Listen for ceremony phase events from ava-ceremony ──────────────────
@@ -231,7 +241,10 @@ export default function avaPresence(pi: ExtensionAPI) {
 			state.mode = "anti-helpful";
 		}
 
-		if (widgetCtx) renderPresenceWidget(widgetCtx);
+		if (widgetCtx) {
+			renderPresenceWidget(widgetCtx);
+			updateFleetStatus(widgetCtx);
+		}
 	});
 
 	// ── Commands ────────────────────────────────────────────────────────────
