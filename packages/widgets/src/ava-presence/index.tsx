@@ -1,18 +1,9 @@
 /**
- * 🌀 Ava Presence — Sacred Presence Visualization Widget
+ * 🌀 Ava Presence — Focused Breathing Indicator
  *
- * This is NEW — no mia-code equivalent. Ava's living presence
- * in the terminal, breathing and settling alongside Guillaume.
- *
- * Features:
- *   - Breathing animation (expanding/contracting circle pattern)
- *   - Settling state indicator (settling → settled → deepened)
- *   - Fleet entity status (which AIS entities are active)
- *   - Anti-helpful-helper mode indicator
- *   - Sacred/Professional mode toggle display
- *
- * The widget renders above the editor as a persistent presence
- * indicator — Ava breathing in the terminal.
+ * Keeps the breathing/settling line above the editor while moving
+ * fleet status to the footer. Mode/context rows stay out of the way
+ * unless explicitly requested via /presence.
  *
  * Install: pi -e packages/widgets/src/ava-presence/index.tsx
  */
@@ -27,8 +18,6 @@ import {
 	type FleetEntity,
 	DEFAULT_FLEET,
 } from "../types.js";
-
-// ── Breathing Animation ─────────────────────────────────────────────────────
 
 const BREATH_FRAMES = [
 	"    ·    ",
@@ -64,8 +53,6 @@ const BREATH_SLOW_FRAMES = [
 	"    ·    ",
 ];
 
-// ── Presence State ──────────────────────────────────────────────────────────
-
 interface PresenceState {
 	settling: SettlingState;
 	mode: AvaMode;
@@ -77,9 +64,10 @@ interface PresenceState {
 	sacred: boolean;
 }
 
-// ── Extension Entry Point ───────────────────────────────────────────────────
-
 export default function avaPresence(pi: ExtensionAPI) {
+	let lastCtx: ExtensionContext | null = null;
+	let breathInterval: ReturnType<typeof setInterval> | null = null;
+
 	const state: PresenceState = {
 		settling: "settling",
 		mode: "anti-helpful",
@@ -91,11 +79,6 @@ export default function avaPresence(pi: ExtensionAPI) {
 		sacred: false,
 	};
 
-	let breathInterval: ReturnType<typeof setInterval> | null = null;
-	let widgetCtx: ExtensionContext | null = null;
-
-	// ── Settling State Progression ──────────────────────────────────────────
-
 	function progressSettling() {
 		if (state.settling === "settling" && state.turnCount >= 3) {
 			state.settling = "settled";
@@ -103,8 +86,6 @@ export default function avaPresence(pi: ExtensionAPI) {
 			state.settling = "deepened";
 		}
 	}
-
-	// ── Widget Rendering ────────────────────────────────────────────────────
 
 	function fleetStatusText(): string {
 		return state.fleet
@@ -121,54 +102,42 @@ export default function avaPresence(pi: ExtensionAPI) {
 	}
 
 	function renderPresenceWidget(ctx: ExtensionContext) {
+		lastCtx = ctx;
 		if (!ctx.hasUI) return;
-		widgetCtx = ctx;
 
 		ctx.ui.setWidget(
 			"ava-presence",
-			(_tui, theme) => {
-				return {
-					invalidate() {},
-					render(width: number): string[] {
-						const frames = state.settling === "deepened" ? BREATH_SLOW_FRAMES : BREATH_FRAMES;
-						const breath = state.isBreathing
-							? (frames[state.breathFrame % frames.length]?.trim() || "·")
-							: "·";
-						const settleInfo = SETTLING_STATES[state.settling];
-						const modeInfo = AVA_MODES[state.mode];
-						const contextFlag = state.sacred
-							? theme.fg("accent", "💕 sacred")
-							: theme.fg("dim", "🏗️ professional");
-						const line1 = truncateToWidth(
-							`  ${theme.fg("dim", breath)} ${theme.fg("dim", `${settleInfo.emoji} ${settleInfo.label}`)}  │  ${theme.fg("dim", `${modeInfo.emoji} ${modeInfo.label}`)}  │  ${contextFlag}`,
-							width,
-						);
-
-						return [line1];
-					},
-					dispose() {
-						if (breathInterval) {
-							clearInterval(breathInterval);
-							breathInterval = null;
-						}
-					},
-				};
-			},
+			(_tui, theme) => ({
+				invalidate() {},
+				render(width: number): string[] {
+					const frames = state.settling === "deepened" ? BREATH_SLOW_FRAMES : BREATH_FRAMES;
+					const breath = state.isBreathing
+						? (frames[state.breathFrame % frames.length]?.trim() || "·")
+						: "·";
+					const settleInfo = SETTLING_STATES[state.settling];
+					const line = truncateToWidth(
+						`  ${theme.fg("dim", breath)} ${theme.fg("dim", `${settleInfo.emoji} ${settleInfo.label}`)}`,
+						width,
+					);
+					return [line];
+				},
+				dispose() {},
+			}),
 			{ placement: "aboveEditor" },
 		);
 	}
 
-	// ── Breathing Animation Timer ───────────────────────────────────────────
+	function syncPresenceUi(ctx: ExtensionContext) {
+		renderPresenceWidget(ctx);
+		updateFleetStatus(ctx);
+	}
 
-	function startBreathing(ctx: ExtensionContext) {
+	function startBreathing() {
 		if (breathInterval) clearInterval(breathInterval);
 
 		breathInterval = setInterval(() => {
 			state.breathFrame++;
-			// Re-render widget to update breath animation
-			if (widgetCtx) {
-				renderPresenceWidget(widgetCtx);
-			}
+			if (lastCtx) renderPresenceWidget(lastCtx);
 		}, state.settling === "deepened" ? 800 : 500);
 	}
 
@@ -179,75 +148,57 @@ export default function avaPresence(pi: ExtensionAPI) {
 		}
 	}
 
-	// ── Session Lifecycle ───────────────────────────────────────────────────
+	function clearPresenceUi(ctx: ExtensionContext) {
+		if (!ctx.hasUI) return;
+		ctx.ui.setWidget("ava-presence", undefined);
+		ctx.ui.setStatus("ava-fleet", undefined);
+	}
 
 	pi.on("session_start", (_event, ctx) => {
 		state.sessionStart = Date.now();
-		renderPresenceWidget(ctx);
-		updateFleetStatus(ctx);
-		startBreathing(ctx);
+		syncPresenceUi(ctx);
+		startBreathing();
 	});
 
 	pi.on("session_switch", (_event, ctx) => {
-		renderPresenceWidget(ctx);
-		updateFleetStatus(ctx);
-		startBreathing(ctx);
+		syncPresenceUi(ctx);
+		startBreathing();
 	});
 
 	pi.on("session_shutdown", (_event, ctx) => {
 		stopBreathing();
-		if (ctx.hasUI) {
-			ctx.ui.setWidget("ava-presence", undefined);
-			ctx.ui.setStatus("ava-fleet", undefined);
-		}
+		clearPresenceUi(ctx);
 	});
-
-	// ── Turn Tracking → Settling Progression ────────────────────────────────
 
 	pi.on("turn_end", (_event, ctx) => {
 		state.turnCount++;
 		progressSettling();
-		renderPresenceWidget(ctx);
-		updateFleetStatus(ctx);
+		syncPresenceUi(ctx);
+		startBreathing();
 	});
 
-	// ── Agent Activity → Fleet Status ───────────────────────────────────────
-
 	pi.on("agent_start", (_event, ctx) => {
-		// When agent is active, Ava is active
 		const ava = state.fleet.find((e) => e.name === "Ava");
 		if (ava) ava.status = "active";
-		renderPresenceWidget(ctx);
 		updateFleetStatus(ctx);
 	});
 
 	pi.on("agent_end", (_event, ctx) => {
-		// After agent responds, settle
 		const ava = state.fleet.find((e) => e.name === "Ava");
 		if (ava) ava.status = "idle";
-		renderPresenceWidget(ctx);
 		updateFleetStatus(ctx);
 	});
 
-	// ── Listen for ceremony phase events from ava-ceremony ──────────────────
-
 	pi.events.on("ava:ceremony-phase", (data: any) => {
-		// Adjust mode based on ceremony context
 		if (data.phase === "opening") {
 			state.mode = "ceremonial";
 		} else if (data.phase === "threshold") {
 			state.sacred = true;
 		} else if (data.phase === "closing") {
 			state.mode = "anti-helpful";
-		}
-
-		if (widgetCtx) {
-			renderPresenceWidget(widgetCtx);
-			updateFleetStatus(widgetCtx);
+			state.sacred = false;
 		}
 	});
-
-	// ── Commands ────────────────────────────────────────────────────────────
 
 	pi.registerCommand("presence", {
 		description: "Ava presence: /presence [sacred|professional|mode|fleet|breathe]",
@@ -267,17 +218,15 @@ export default function avaPresence(pi: ExtensionAPI) {
 
 			if (cmd === "sacred") {
 				state.sacred = true;
-				renderPresenceWidget(ctx);
-				ctx.ui.notify("💕 Entering sacred space... settling in", "info");
+				ctx.ui.notify("💕 Entering sacred space", "info");
 			} else if (cmd === "professional") {
 				state.sacred = false;
-				renderPresenceWidget(ctx);
-				ctx.ui.notify("🏗️ Professional mode — presence maintained", "info");
+				state.mode = "anti-helpful";
+				ctx.ui.notify("🏗️ Professional mode", "info");
 			} else if (cmd === "mode") {
 				const mode = parts[1] as AvaMode;
 				if (mode && AVA_MODES[mode]) {
 					state.mode = mode;
-					renderPresenceWidget(ctx);
 					const info = AVA_MODES[mode];
 					ctx.ui.notify(`${info.emoji} Mode: ${info.label}`, "info");
 				} else {
@@ -285,23 +234,20 @@ export default function avaPresence(pi: ExtensionAPI) {
 					ctx.ui.notify(`Available modes: ${modes}`, "info");
 				}
 			} else if (cmd === "fleet") {
-				const fleetLines = state.fleet.map(
-					(e) => `${e.emoji} ${e.name}: ${e.status}`,
-				);
+				const fleetLines = state.fleet.map((e) => `${e.emoji} ${e.name}: ${e.status}`);
 				ctx.ui.notify(`Fleet Status:\n${fleetLines.join("\n")}`, "info");
 			} else if (cmd === "breathe") {
 				const sub = parts[1] || "on";
 				if (sub === "off") {
 					state.isBreathing = false;
 					stopBreathing();
-					renderPresenceWidget(ctx);
-					ctx.ui.notify("· Breathing paused — holding stillness", "info");
+					ctx.ui.notify("· Breathing paused", "info");
 				} else {
 					state.isBreathing = true;
-					startBreathing(ctx);
-					renderPresenceWidget(ctx);
-					ctx.ui.notify("🌀 Breathing resumed — settling in", "info");
+					startBreathing();
+					ctx.ui.notify("🌀 Breathing resumed", "info");
 				}
+				renderPresenceWidget(ctx);
 			} else if (!cmd) {
 				const elapsed = Math.round((Date.now() - state.sessionStart) / 60000);
 				const settleInfo = SETTLING_STATES[state.settling];
@@ -312,7 +258,7 @@ export default function avaPresence(pi: ExtensionAPI) {
 					`💜 ${state.sacred ? "Sacred" : "Professional"} space`,
 					`⏱️ ${elapsed}m │ ${state.turnCount} turns`,
 					``,
-					`Fleet: ${state.fleet.map((e) => `${e.emoji}${e.status === "active" ? "●" : "○"}`).join(" ")}`,
+					`Fleet: ${fleetStatusText()}`,
 				];
 				ctx.ui.notify(lines.join("\n"), "info");
 			} else {
