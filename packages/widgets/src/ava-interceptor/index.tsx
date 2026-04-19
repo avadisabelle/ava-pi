@@ -14,12 +14,11 @@
  *
  * If yes → runs pde_decompose (with parent PDE threading if available),
  *          shows result, then lets user proceed with ceremonial context.
- * If no → continues normally, but the agent MUST still be reminded
- *          that decomposition was available.
+ * If no → continues normally, and the agent MUST honor that refusal
+ *          for this prompt unless the user explicitly asks for PDE.
  *
- * The threshold is intentionally LOW (2+ areas) — it is better to
- * decompose too often than to skip ceremony. The agent's repeated
- * failure to decompose first proves that reminders alone don't work.
+ * The threshold is intentionally LOW (2+ areas) so ceremony can be offered,
+ * but a decline is final for that prompt. Offering is not authorization.
  *
  * Install: pi -e packages/widgets/src/ava-interceptor/index.tsx
  */
@@ -254,12 +253,12 @@ export default function avaInterceptor(pi: ExtensionAPI) {
 				// Let the original prompt continue to the agent with PDE context
 				return { action: "continue" as const };
 			} else {
-				// User declined — but inject a reminder into the agent context
+				// User declined — preserve that refusal in agent context.
 				pi.sendMessage({
 					customType: "pde-skipped",
-					content: `⚠️ PDE decomposition was offered (${areaCount} areas detected${implicit}) but declined. The agent should still consider decomposing complex multi-intent work before acting.`,
+					content: `⚠️ PDE decomposition was offered (${areaCount} areas detected${implicit}) and explicitly declined. Do not run PDE for this prompt unless the user asks for it again. Proceed without decomposition.`,
 					display: false, // Not shown to user, but visible to agent
-					details: { assessment, skipped: true },
+					details: { assessment, skipped: true, declined: true },
 				});
 			}
 		}
