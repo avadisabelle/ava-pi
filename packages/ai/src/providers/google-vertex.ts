@@ -45,6 +45,7 @@ export interface GoogleVertexOptions extends StreamOptions {
 }
 
 const API_VERSION = "v1";
+const GCP_VERTEX_CREDENTIALS_MARKER = "gcp-vertex-credentials";
 
 const THINKING_LEVEL_MAP: Record<GoogleThinkingLevel, ThinkingLevel> = {
 	THINKING_LEVEL_UNSPECIFIED: ThinkingLevel.THINKING_LEVEL_UNSPECIFIED,
@@ -225,7 +226,8 @@ export const streamGoogleVertex: StreamFunction<"google-vertex", GoogleVertexOpt
 
 				if (chunk.usageMetadata) {
 					output.usage = {
-						input: chunk.usageMetadata.promptTokenCount || 0,
+						input:
+							(chunk.usageMetadata.promptTokenCount || 0) - (chunk.usageMetadata.cachedContentTokenCount || 0),
 						output:
 							(chunk.usageMetadata.candidatesTokenCount || 0) + (chunk.usageMetadata.thoughtsTokenCount || 0),
 						cacheRead: chunk.usageMetadata.cachedContentTokenCount || 0,
@@ -369,7 +371,7 @@ function createClientWithApiKey(
 
 function resolveApiKey(options?: GoogleVertexOptions): string | undefined {
 	const apiKey = options?.apiKey?.trim() || process.env.GOOGLE_CLOUD_API_KEY?.trim();
-	if (!apiKey || isPlaceholderApiKey(apiKey)) {
+	if (!apiKey || apiKey === GCP_VERTEX_CREDENTIALS_MARKER || isPlaceholderApiKey(apiKey)) {
 		return undefined;
 	}
 	return apiKey;
@@ -436,6 +438,8 @@ function buildParams(
 			thinkingConfig.thinkingBudget = options.thinking.budgetTokens;
 		}
 		config.thinkingConfig = thinkingConfig;
+	} else if (model.reasoning && options.thinking && !options.thinking.enabled) {
+		config.thinkingConfig = getDisabledThinkingConfig(model);
 	}
 
 	if (options.signal) {
@@ -462,6 +466,22 @@ function isGemini3ProModel(model: Model<"google-generative-ai">): boolean {
 
 function isGemini3FlashModel(model: Model<"google-generative-ai">): boolean {
 	return /gemini-3(?:\.\d+)?-flash/.test(model.id.toLowerCase());
+}
+
+function getDisabledThinkingConfig(model: Model<"google-vertex">): ThinkingConfig {
+	// Google docs: Gemini 3.1 Pro cannot disable thinking, and Gemini 3 Flash / Flash-Lite
+	// do not support full thinking-off either. For Gemini 3 models, use the lowest supported
+	// thinkingLevel without includeThoughts so hidden thinking remains invisible to pi.
+	const geminiModel = model as unknown as Model<"google-generative-ai">;
+	if (isGemini3ProModel(geminiModel)) {
+		return { thinkingLevel: ThinkingLevel.LOW };
+	}
+	if (isGemini3FlashModel(geminiModel)) {
+		return { thinkingLevel: ThinkingLevel.MINIMAL };
+	}
+
+	// Gemini 2.x supports disabling via thinkingBudget = 0.
+	return { thinkingBudget: 0 };
 }
 
 function getGemini3ThinkingLevel(

@@ -78,6 +78,7 @@ export interface Settings {
 	shellCommandPrefix?: string; // Prefix prepended to every bash command (e.g., "shopt -s expand_aliases" for alias support)
 	npmCommand?: string[]; // Command used for npm package lookup/install operations, argv-style (e.g., ["mise", "exec", "node@20", "--", "npm"])
 	collapseChangelog?: boolean; // Show condensed changelog after update (use /changelog for full)
+	enableInstallTelemetry?: boolean; // default: true - anonymous version/update ping after changelog-detected updates
 	packages?: PackageSource[]; // Array of npm/git package sources (string or object with filtering)
 	extensions?: string[]; // Array of local extension file paths or directories
 	skills?: string[]; // Array of local skill file paths or directories
@@ -94,6 +95,7 @@ export interface Settings {
 	autocompleteMaxVisible?: number; // Max visible items in autocomplete dropdown (default: 5)
 	showHardwareCursor?: boolean; // Show terminal cursor while still positioning it for IME
 	markdown?: MarkdownSettings;
+	sessionDir?: string; // Custom session storage directory (same format as --session-dir CLI flag)
 }
 
 /** Deep merge settings: project/overrides take precedence, nested objects merge recursively */
@@ -358,7 +360,8 @@ export class SettingsManager {
 		return structuredClone(this.projectSettings);
 	}
 
-	reload(): void {
+	async reload(): Promise<void> {
+		await this.writeQueue;
 		const globalLoad = SettingsManager.tryLoadFromStorage(this.storage, "global");
 		if (!globalLoad.error) {
 			this.globalSettings = globalLoad.settings;
@@ -528,6 +531,10 @@ export class SettingsManager {
 		this.globalSettings.lastChangelogVersion = version;
 		this.markModified("lastChangelogVersion");
 		this.save();
+	}
+
+	getSessionDir(): string | undefined {
+		return this.settings.sessionDir;
 	}
 
 	getDefaultProvider(): string | undefined {
@@ -727,6 +734,16 @@ export class SettingsManager {
 	setCollapseChangelog(collapse: boolean): void {
 		this.globalSettings.collapseChangelog = collapse;
 		this.markModified("collapseChangelog");
+		this.save();
+	}
+
+	getEnableInstallTelemetry(): boolean {
+		return this.settings.enableInstallTelemetry ?? true;
+	}
+
+	setEnableInstallTelemetry(enabled: boolean): void {
+		this.globalSettings.enableInstallTelemetry = enabled;
+		this.markModified("enableInstallTelemetry");
 		this.save();
 	}
 
