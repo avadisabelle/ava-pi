@@ -66,7 +66,7 @@
 		}
 	},
 	"optionalDependencies": {
-		"@avadisabelle/ava-widgets": "^0.64.7",
+		"@avadisabelle/ava-widgets": "^0.64.8",
 		"@mariozechner/clipboard": "^0.3.2"
 	},
 	"devDependencies": {
