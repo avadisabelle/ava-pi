@@ -1,6 +1,6 @@
 {
 	"name": "@avadisabelle/ava-pi-pods",
-	"version": "0.64.5",
+	"version": "0.64.6",
 	"description": "CLI tool for managing vLLM deployments on GPU pods",
 	"type": "module",
 	"bin": {
@@ -33,7 +33,7 @@
 		"node": ">=20.0.0"
 	},
 	"dependencies": {
-		"@avadisabelle/ava-pi-agent-core": "^0.64.5",
+		"@avadisabelle/ava-pi-agent-core": "^0.64.6",
 		"chalk": "^5.5.0"
 	},
 	"devDependencies": {}
