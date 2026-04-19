@@ -1,6 +1,6 @@
 {
 	"name": "ava-pi-monorepo",
-	"private": true,
+	"private": false,
 	"type": "module",
 	"workspaces": [
 		"packages/*",
