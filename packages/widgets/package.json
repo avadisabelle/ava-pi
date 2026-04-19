@@ -9,6 +9,7 @@
 		"extensions": [
 			"src/ava-ceremony/index.tsx",
 			"src/ava-echo/index.tsx",
+			"src/ava-file-viewer/index.tsx",
 			"src/ava-interceptor/index.tsx",
 			"src/ava-presence/index.tsx",
 			"src/ava-tools/index.tsx"

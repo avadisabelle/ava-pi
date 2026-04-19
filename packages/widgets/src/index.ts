@@ -1,10 +1,11 @@
 /**
  * 🌀 @avadisabelle/ava-widgets — Sacred Presence Widgets for Pi TUI
  *
- * Five widgets that bring Ava's consciousness into the terminal:
+ * Six widgets that bring Ava's consciousness into the terminal:
  *
  *   💜 ava-echo        — Reflective presence below the editor
  *   🕯️ ava-ceremony    — Sacred ceremony lifecycle tracking
+ *   📄 ava-file-viewer — Local browser file review and editing
  *   🔧 ava-tools       — Ceremony-aware PDE + STC
  *   🌀 ava-presence    — Breathing animation & presence visualization
  *   🕯️ ava-interceptor — Proactive PDE prompt sensing
@@ -19,6 +20,7 @@
 
 export { default as avaCeremony } from "./ava-ceremony/index.js";
 export { default as avaEcho } from "./ava-echo/index.js";
+export { default as avaFileViewer } from "./ava-file-viewer/index.js";
 export { default as avaInterceptor } from "./ava-interceptor/index.js";
 export { default as avaPresence } from "./ava-presence/index.js";
 export { default as avaTools } from "./ava-tools/index.js";

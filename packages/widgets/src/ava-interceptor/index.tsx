@@ -28,6 +28,7 @@ import { spawn } from "child_process";
 import { createRequire } from "module";
 import { existsSync, readFileSync } from "fs";
 import { dirname, join } from "path";
+import { showFileViewer } from "../lib/file-viewer.js";
 
 // ── Resolve miaco binary from mia-co package ────────────────────────────────
 
@@ -232,15 +233,28 @@ export default function avaInterceptor(pi: ExtensionAPI) {
 
 				if (result.code === 0) {
 					const parsed = parseJson(result.stdout);
+					const parentId = lastPdeId;
 
 					// Track this PDE's ID for future parent chaining
 					if (parsed?.id) {
 						lastPdeId = parsed.id;
-						pi.events.emit("ava:pde-complete", { id: parsed.id, parent: lastPdeId });
+						pi.events.emit("ava:pde-complete", {
+							id: parsed.id,
+							parent: parentId,
+							markdownPath: parsed.markdownPath || null,
+						});
 					}
 
 					if (parsed?.markdownPath && existsSync(parsed.markdownPath)) {
-						const md = readFileSync(parsed.markdownPath, "utf-8");
+						let md = readFileSync(parsed.markdownPath, "utf-8");
+						if (ctx.hasUI) {
+							const review = await showFileViewer(ctx, {
+								filePath: parsed.markdownPath,
+								title: "PDE Review",
+								editable: true,
+							});
+							md = review.content;
+						}
 						pi.sendMessage({
 							customType: "pde-result",
 							content: md,

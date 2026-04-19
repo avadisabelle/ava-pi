@@ -22,6 +22,7 @@ import { spawn } from "child_process";
 import { createRequire } from "module";
 import { existsSync, readFileSync, readdirSync, statSync } from "fs";
 import { dirname, join } from "path";
+import { showFileViewer } from "../lib/file-viewer.js";
 import { DIRECTIONS, type Direction, CEREMONY_PHASES, type CeremonyPhase } from "../types.js";
 
 // ── Helpers ─────────────────────────────────────────────────────────────────
@@ -221,13 +222,25 @@ export default function avaTools(pi: ExtensionAPI) {
 			// Track PDE ID for parent chaining
 			if (parsed.id) {
 				lastPdeId = parsed.id;
-				pi.events.emit("ava:pde-complete", { id: parsed.id, parent: params.parent || null });
+				pi.events.emit("ava:pde-complete", {
+					id: parsed.id,
+					parent: params.parent || null,
+					markdownPath: parsed.markdownPath || null,
+				});
 			}
 
 			const mdPath = parsed.markdownPath;
 			let markdown = "";
 			if (mdPath && existsSync(mdPath)) {
 				markdown = readFileSync(mdPath, "utf-8");
+				if (ctx.hasUI) {
+					const review = await showFileViewer(ctx, {
+						filePath: mdPath,
+						title: "PDE Review",
+						editable: true,
+					});
+					markdown = review.content;
+				}
 			}
 
 			return {
@@ -549,8 +562,22 @@ export default function avaTools(pi: ExtensionAPI) {
 			}
 
 			const parsed = parseJson(result.stdout);
+			if (parsed?.id) {
+				lastPdeId = parsed.id;
+				pi.events.emit("ava:pde-complete", {
+					id: parsed.id,
+					parent: parentUuid || null,
+					markdownPath: parsed.markdownPath || null,
+				});
+			}
 			if (parsed?.markdownPath && existsSync(parsed.markdownPath)) {
-				const md = readFileSync(parsed.markdownPath, "utf-8");
+				let md = readFileSync(parsed.markdownPath, "utf-8");
+				const review = await showFileViewer(ctx, {
+					filePath: parsed.markdownPath,
+					title: "PDE Review",
+					editable: true,
+				});
+				md = review.content;
 				pi.sendMessage({
 					customType: "pde-result",
 					content: md,
