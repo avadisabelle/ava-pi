@@ -1,6 +1,6 @@
 {
 	"name": "@avadisabelle/ava-pi-trading",
-	"version": "0.64.6",
+	"version": "0.64.7",
 	"description": "Williams 5D trading types, ARIANE trade gate protocol, and garden metaphor for the Ava ecosystem",
 	"type": "module",
 	"main": "./dist/index.js",
@@ -40,7 +40,7 @@
 		"directory": "packages/trading"
 	},
 	"dependencies": {
-		"@avadisabelle/ava-council": "^0.64.6"
+		"@avadisabelle/ava-council": "^0.64.7"
 	},
 	"devDependencies": {
 		"@types/node": "^22.10.5",
