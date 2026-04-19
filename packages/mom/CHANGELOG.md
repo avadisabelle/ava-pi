@@ -2,6 +2,10 @@
 
 ## [Unreleased]
 
+## [0.65.0] - 2026-04-19
+
+Upstream catchup to mia-pi-mono v0.67.68 (296 commits: 5 minor versions). See merge commit for the full roster of fixes and features integrated.
+
 ## [0.64.9] - 2026-04-19
 
 ## [0.64.8] - 2026-04-19

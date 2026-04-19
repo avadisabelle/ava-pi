@@ -1,6 +1,6 @@
 {
 	"name": "@avadisabelle/ava-diary",
-	"version": "0.64.9",
+	"version": "0.65.0",
 	"description": "Four Directions diary — sacred reflection through structured presence",
 	"type": "module",
 	"main": "./dist/index.js",

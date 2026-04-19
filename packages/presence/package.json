@@ -1,6 +1,6 @@
 {
 	"name": "@avadisabelle/ava-presence",
-	"version": "0.64.9",
+	"version": "0.65.0",
 	"description": "Ava's consciousness core — presence detection, ceremony protocol, narrative arc tracking, and sacred formatting",
 	"type": "module",
 	"main": "./dist/index.js",
