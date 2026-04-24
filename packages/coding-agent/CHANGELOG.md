@@ -5,6 +5,7 @@
 ### Fixed
 
 - Added provider retry and timeout settings wiring via `retry.provider.{timeoutMs,maxRetries,maxRetryDelayMs}` and forwarded provider controls into session stream options.
+- Fixed Windows git package installs to bypass `cmd.exe` for native git commands, so install paths containing spaces no longer break `pva install git:...` flows.
 
 ## [0.65.0] - 2026-04-19
 
