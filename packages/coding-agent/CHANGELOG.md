@@ -2,6 +2,10 @@
 
 ## [Unreleased]
 
+### Fixed
+
+- Added provider retry and timeout settings wiring via `retry.provider.{timeoutMs,maxRetries,maxRetryDelayMs}` and forwarded provider controls into session stream options.
+
 ## [0.65.0] - 2026-04-19
 
 Upstream catchup to mia-pi-mono v0.67.68 (296 commits: 5 minor versions). See merge commit for the full roster of fixes and features integrated.

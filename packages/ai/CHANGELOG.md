@@ -2,6 +2,10 @@
 
 ## [Unreleased]
 
+### Fixed
+
+- Exposed provider request controls to forward `timeoutMs` and `maxRetries` through Anthropic, OpenAI, and Azure OpenAI request options, preventing unconfigurable SDK timeout/retry defaults on long-running local inference requests.
+
 ## [0.65.0] - 2026-04-19
 
 Upstream catchup to mia-pi-mono v0.67.68 (296 commits: 5 minor versions). See merge commit for the full roster of fixes and features integrated.

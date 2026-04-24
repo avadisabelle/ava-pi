@@ -274,7 +274,14 @@ export const streamAnthropic: StreamFunction<"anthropic-messages", AnthropicOpti
 				params = nextParams as MessageCreateParamsStreaming;
 			}
 			const { data: anthropicStream, response } = await client.messages
-				.stream({ ...params, stream: true }, { signal: options?.signal })
+				.stream(
+					{ ...params, stream: true },
+					{
+						signal: options?.signal,
+						timeout: options?.timeoutMs,
+						maxRetries: options?.maxRetries,
+					},
+				)
 				.withResponse();
 			await options?.onResponse?.({ status: response.status, headers: headersToRecord(response.headers) }, model);
 			stream.push({ type: "start", partial: output });
