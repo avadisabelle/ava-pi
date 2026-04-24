@@ -5,6 +5,7 @@
 ### Fixed
 
 - Exposed provider request controls to forward `timeoutMs` and `maxRetries` through Anthropic, OpenAI, and Azure OpenAI request options, preventing unconfigurable SDK timeout/retry defaults on long-running local inference requests.
+- Omitted undefined `timeout` and `maxRetries` provider request options, avoiding downstream SDK validation errors when provider controls are not configured.
 
 ## [0.65.0] - 2026-04-19
 
