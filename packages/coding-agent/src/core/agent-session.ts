@@ -117,6 +117,7 @@ export type AgentSessionEvent =
 			followUp: readonly string[];
 	  }
 	| { type: "compaction_start"; reason: "manual" | "threshold" | "overflow" }
+	| { type: "session_info_changed"; name: string | undefined }
 	| {
 			type: "compaction_end";
 			reason: "manual" | "threshold" | "overflow";
@@ -2170,7 +2171,7 @@ export class AgentSession {
 					this.sessionManager.appendCustomEntry(customType, data);
 				},
 				setSessionName: (name) => {
-					this.sessionManager.appendSessionInfo(name);
+					this.setSessionName(name);
 				},
 				getSessionName: () => {
 					return this.sessionManager.getSessionName();
@@ -2644,6 +2645,7 @@ export class AgentSession {
 	 */
 	setSessionName(name: string): void {
 		this.sessionManager.appendSessionInfo(name);
+		this._emit({ type: "session_info_changed", name: this.sessionManager.getSessionName() });
 	}
 
 	// =========================================================================
