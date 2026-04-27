@@ -2,6 +2,12 @@
 
 ## [Unreleased]
 
+## [0.65.2] - 2026-04-27
+
+### Fixed
+
+- Decoded CSI-u Ctrl+letter sequences inside bracketed paste so interactive editor input is preserved in terminals that emit that encoding.
+
 ## [0.65.0] - 2026-04-19
 
 Upstream catchup to mia-pi-mono v0.67.68 (296 commits: 5 minor versions). See merge commit for the full roster of fixes and features integrated.

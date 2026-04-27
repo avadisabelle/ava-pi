@@ -2,6 +2,8 @@
 
 ## [Unreleased]
 
+## [0.65.2] - 2026-04-27
+
 ### Fixed
 
 - Added provider retry and timeout settings wiring via `retry.provider.{timeoutMs,maxRetries,maxRetryDelayMs}` and forwarded provider controls into session stream options.
