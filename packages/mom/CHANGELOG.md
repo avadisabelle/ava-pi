@@ -2,6 +2,10 @@
 
 ## [Unreleased]
 
+## [0.65.0] - 2026-04-19
+
+Upstream catchup to mia-pi-mono v0.67.68 (296 commits: 5 minor versions). See merge commit for the full roster of fixes and features integrated.
+
 ## [0.64.9] - 2026-04-19
 
 ## [0.64.8] - 2026-04-19
@@ -29,6 +33,47 @@
 ## [0.63.0] - 2026-04-01
 
 ## [0.62.1] - 2026-03-31
+## [0.67.68] - 2026-04-17
+
+## [0.67.67] - 2026-04-17
+
+## [0.67.6] - 2026-04-16
+
+## [0.67.5] - 2026-04-16
+
+## [0.67.4] - 2026-04-16
+
+## [0.67.3] - 2026-04-15
+
+## [0.67.2] - 2026-04-14
+
+## [0.67.1] - 2026-04-13
+
+## [0.67.0] - 2026-04-13
+
+## [0.66.1] - 2026-04-08
+
+## [0.66.0] - 2026-04-08
+
+## [0.65.2] - 2026-04-06
+
+## [0.65.1] - 2026-04-05
+
+## [0.65.0] - 2026-04-03
+
+## [0.64.0] - 2026-03-29
+
+## [0.63.2] - 2026-03-29
+
+## [0.63.1] - 2026-03-27
+
+### Fixed
+
+- Fixed Mom compaction status handling to follow the unified `compaction_start` and `compaction_end` session events, keeping compaction notifications working after the event rename ([#2617](https://github.com/badlogic/pi-mono/issues/2617))
+
+## [0.63.0] - 2026-03-27
+
+## [0.62.0] - 2026-03-23
 
 ## [0.61.1] - 2026-03-20
 

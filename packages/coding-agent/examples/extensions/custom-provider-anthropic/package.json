@@ -1,7 +1,7 @@
 {
   "name": "pi-extension-custom-provider-anthropic",
   "private": true,
-  "version": "0.64.9",
+  "version": "0.65.2",
   "type": "module",
   "scripts": {
     "clean": "echo 'nothing to clean'",

@@ -1,6 +1,6 @@
 {
 	"name": "ava-pi-monorepo",
-	"private": true,
+	"private": false,
 	"type": "module",
 	"workspaces": [
 		"packages/*",
@@ -17,6 +17,8 @@
 		"dev:tsc": "concurrently --names \"ai,web-ui\" --prefix-colors \"cyan,green\" \"cd packages/ai && npm run dev:tsc\" \"cd packages/web-ui && npm run dev:tsc\"",
 		"check": "biome check --write --error-on-warnings . && tsgo --noEmit && npm run check:browser-smoke && cd packages/web-ui && npm run check",
 		"check:browser-smoke": "node scripts/check-browser-smoke.mjs",
+		"profile:tui": "node scripts/profile-coding-agent-node.mjs --mode tui",
+		"profile:rpc": "node scripts/profile-coding-agent-node.mjs --mode rpc",
 		"test": "npm run test --workspaces --if-present",
 		"version:patch": "npm version patch -ws --no-git-tag-version && node scripts/sync-versions.js && shx rm -rf node_modules packages/*/node_modules package-lock.json && npm install --legacy-peer-deps",
 		"version:minor": "npm version minor -ws --no-git-tag-version && node scripts/sync-versions.js && shx rm -rf node_modules packages/*/node_modules package-lock.json && npm install --legacy-peer-deps",
@@ -46,12 +48,11 @@
 	"version": "0.0.3",
 	"dependencies": {
 		"@mariozechner/jiti": "^2.6.5",
-		"@avadisabelle/ava-pi-coding-agent": "^0.64.9",
+		"@avadisabelle/ava-pi-coding-agent": "^0.65.2",
 		"get-east-asian-width": "^1.4.0"
 	},
 	"overrides": {
 		"rimraf": "6.1.2",
-		"fast-xml-parser": "5.3.8",
 		"gaxios": {
 			"rimraf": "6.1.2"
 		}
