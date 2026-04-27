@@ -470,15 +470,20 @@ function handleContentBlockStop(
  * whose ARNs don't contain the model name.
  */
 function supportsAdaptiveThinking(modelId: string, modelName?: string): boolean {
-	const candidates = modelName ? [modelId, modelName] : [modelId];
+	const candidates = [modelId, modelName]
+		.filter((value): value is string => Boolean(value))
+		.map((value) => value.toLowerCase());
 	return candidates.some(
 		(s) =>
 			s.includes("opus-4-6") ||
 			s.includes("opus-4.6") ||
+			s.includes("opus 4.6") ||
 			s.includes("opus-4-7") ||
 			s.includes("opus-4.7") ||
+			s.includes("opus 4.7") ||
 			s.includes("sonnet-4-6") ||
-			s.includes("sonnet-4.6"),
+			s.includes("sonnet-4.6") ||
+			s.includes("sonnet 4.6"),
 	);
 }
 
@@ -487,7 +492,9 @@ function mapThinkingLevelToEffort(
 	modelId: string,
 	modelName?: string,
 ): "low" | "medium" | "high" | "xhigh" | "max" {
-	const candidates = modelName ? [modelId, modelName] : [modelId];
+	const candidates = [modelId, modelName]
+		.filter((value): value is string => Boolean(value))
+		.map((value) => value.toLowerCase());
 	switch (level) {
 		case "minimal":
 		case "low":
@@ -565,12 +572,13 @@ function supportsPromptCaching(model: Model<"bedrock-converse-stream">): boolean
 		if (typeof process !== "undefined" && process.env.AWS_BEDROCK_FORCE_CACHE === "1") return true;
 		return false;
 	}
-	// Claude 4.x models (opus-4, sonnet-4, haiku-4)
-	if (candidates.some((s) => s.includes("-4-") || s.includes("-4."))) return true;
+	// Claude 4.x models (opus-4, sonnet-4, haiku-4), including human-readable names like "Claude Sonnet 4.6".
+	if (candidates.some((s) => s.includes("-4-") || s.includes("-4.") || s.includes(" 4-") || s.includes(" 4.")))
+		return true;
 	// Claude 3.7 Sonnet
-	if (candidates.some((s) => s.includes("claude-3-7-sonnet"))) return true;
+	if (candidates.some((s) => s.includes("claude-3-7-sonnet") || s.includes("claude 3.7 sonnet"))) return true;
 	// Claude 3.5 Haiku
-	if (candidates.some((s) => s.includes("claude-3-5-haiku"))) return true;
+	if (candidates.some((s) => s.includes("claude-3-5-haiku") || s.includes("claude 3.5 haiku"))) return true;
 	return false;
 }
 
