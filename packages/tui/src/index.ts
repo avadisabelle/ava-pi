@@ -4,6 +4,7 @@
 export {
 	type AutocompleteItem,
 	type AutocompleteProvider,
+	type AutocompleteSuggestions,
 	CombinedAutocompleteProvider,
 	type SlashCommand,
 } from "./autocomplete.js";
@@ -77,12 +78,14 @@ export {
 	getJpegDimensions,
 	getPngDimensions,
 	getWebpDimensions,
+	hyperlink,
 	type ImageDimensions,
 	type ImageProtocol,
 	type ImageRenderOptions,
 	imageFallback,
 	renderImage,
 	resetCapabilitiesCache,
+	setCapabilities,
 	setCellDimensions,
 	type TerminalCapabilities,
 } from "./terminal-image.js";

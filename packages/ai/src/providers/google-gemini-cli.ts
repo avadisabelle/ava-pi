@@ -21,6 +21,7 @@ import type {
 	ToolCall,
 } from "../types.js";
 import { AssistantMessageEventStream } from "../utils/event-stream.js";
+import { headersToRecord } from "../utils/headers.js";
 import { sanitizeSurrogates } from "../utils/sanitize-unicode.js";
 import {
 	convertMessages,
@@ -77,7 +78,7 @@ const GEMINI_CLI_HEADERS = {
 };
 
 // Headers for Antigravity (sandbox endpoint) - requires specific User-Agent
-const DEFAULT_ANTIGRAVITY_VERSION = "1.18.4";
+const DEFAULT_ANTIGRAVITY_VERSION = "1.21.9";
 
 function getAntigravityHeaders() {
 	const version = process.env.PI_AI_ANTIGRAVITY_VERSION || DEFAULT_ANTIGRAVITY_VERSION;
@@ -408,6 +409,10 @@ export const streamGoogleGeminiCli: StreamFunction<"google-gemini-cli", GoogleGe
 						body: requestBodyJson,
 						signal: options?.signal,
 					});
+					await options?.onResponse?.(
+						{ status: response.status, headers: headersToRecord(response.headers) },
+						model,
+					);
 
 					if (response.ok) {
 						break; // Success, exit retry loop
@@ -757,6 +762,10 @@ export const streamGoogleGeminiCli: StreamFunction<"google-gemini-cli", GoogleGe
 						body: requestBodyJson,
 						signal: options?.signal,
 					});
+					await options?.onResponse?.(
+						{ status: currentResponse.status, headers: headersToRecord(currentResponse.headers) },
+						model,
+					);
 
 					if (!currentResponse.ok) {
 						const retryErrorText = await currentResponse.text();
@@ -889,6 +898,8 @@ export function buildRequest(
 		} else if (options.thinking.budgetTokens !== undefined) {
 			generationConfig.thinkingConfig.thinkingBudget = options.thinking.budgetTokens;
 		}
+	} else if (model.reasoning && options.thinking && !options.thinking.enabled) {
+		generationConfig.thinkingConfig = getDisabledThinkingConfig(model.id);
 	}
 
 	const request: CloudCodeAssistRequest["request"] = {
@@ -945,6 +956,21 @@ export function buildRequest(
 }
 
 type ClampedThinkingLevel = Exclude<ThinkingLevel, "xhigh">;
+
+function getDisabledThinkingConfig(modelId: string): ThinkingConfig {
+	// Google docs: Gemini 3.1 Pro cannot disable thinking, and Gemini 3 Flash / Flash-Lite
+	// do not support full thinking-off either. For Gemini 3 models, use the lowest supported
+	// thinkingLevel without includeThoughts so hidden thinking remains invisible to pi.
+	if (isGemini3ProModel(modelId)) {
+		return { thinkingLevel: "LOW" as any };
+	}
+	if (isGemini3FlashModel(modelId)) {
+		return { thinkingLevel: "MINIMAL" as any };
+	}
+
+	// Gemini 2.x supports disabling via thinkingBudget = 0.
+	return { thinkingBudget: 0 };
+}
 
 function getGeminiCliThinkingLevel(effort: ClampedThinkingLevel, modelId: string): GoogleThinkingLevel {
 	if (isGemini3ProModel(modelId)) {

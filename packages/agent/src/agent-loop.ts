@@ -341,7 +341,10 @@ async function executeToolCalls(
 	emit: AgentEventSink,
 ): Promise<ToolResultMessage[]> {
 	const toolCalls = assistantMessage.content.filter((c) => c.type === "toolCall");
-	if (config.toolExecution === "sequential") {
+	const hasSequentialToolCall = toolCalls.some(
+		(tc) => currentContext.tools?.find((t) => t.name === tc.name)?.executionMode === "sequential",
+	);
+	if (config.toolExecution === "sequential" || hasSequentialToolCall) {
 		return executeToolCallsSequential(currentContext, assistantMessage, toolCalls, config, signal, emit);
 	}
 	return executeToolCallsParallel(currentContext, assistantMessage, toolCalls, config, signal, emit);
@@ -455,6 +458,20 @@ type ExecutedToolCallOutcome = {
 	isError: boolean;
 };
 
+function prepareToolCallArguments(tool: AgentTool<any>, toolCall: AgentToolCall): AgentToolCall {
+	if (!tool.prepareArguments) {
+		return toolCall;
+	}
+	const preparedArguments = tool.prepareArguments(toolCall.arguments);
+	if (preparedArguments === toolCall.arguments) {
+		return toolCall;
+	}
+	return {
+		...toolCall,
+		arguments: preparedArguments as Record<string, any>,
+	};
+}
+
 async function prepareToolCall(
 	currentContext: AgentContext,
 	assistantMessage: AssistantMessage,
@@ -472,7 +489,8 @@ async function prepareToolCall(
 	}
 
 	try {
-		const validatedArgs = validateToolArguments(tool, toolCall);
+		const preparedToolCall = prepareToolCallArguments(tool, toolCall);
+		const validatedArgs = validateToolArguments(tool, preparedToolCall);
 		if (config.beforeToolCall) {
 			const beforeResult = await config.beforeToolCall(
 				{
@@ -556,23 +574,28 @@ async function finalizeExecutedToolCall(
 	let isError = executed.isError;
 
 	if (config.afterToolCall) {
-		const afterResult = await config.afterToolCall(
-			{
-				assistantMessage,
-				toolCall: prepared.toolCall,
-				args: prepared.args,
-				result,
-				isError,
-				context: currentContext,
-			},
-			signal,
-		);
-		if (afterResult) {
-			result = {
-				content: afterResult.content ?? result.content,
-				details: afterResult.details ?? result.details,
-			};
-			isError = afterResult.isError ?? isError;
+		try {
+			const afterResult = await config.afterToolCall(
+				{
+					assistantMessage,
+					toolCall: prepared.toolCall,
+					args: prepared.args,
+					result,
+					isError,
+					context: currentContext,
+				},
+				signal,
+			);
+			if (afterResult) {
+				result = {
+					content: afterResult.content ?? result.content,
+					details: afterResult.details ?? result.details,
+				};
+				isError = afterResult.isError ?? isError;
+			}
+		} catch (error) {
+			result = createErrorToolResult(error instanceof Error ? error.message : String(error));
+			isError = true;
 		}
 	}
 

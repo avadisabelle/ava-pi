@@ -7,6 +7,7 @@
 
 import {
 	createAgentSession,
+	createSyntheticSourceInfo,
 	DefaultResourceLoader,
 	SessionManager,
 	type Skill,
@@ -18,7 +19,7 @@ const customSkill: Skill = {
 	description: "Custom project instructions",
 	filePath: "/virtual/SKILL.md",
 	baseDir: "/virtual",
-	source: "path",
+	sourceInfo: createSyntheticSourceInfo("/virtual/SKILL.md", { source: "sdk" }),
 	disableModelInvocation: false,
 };
 

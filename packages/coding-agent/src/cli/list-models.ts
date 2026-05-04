@@ -4,6 +4,7 @@
 
 import type { Api, Model } from "@avadisabelle/ava-pi-ai";
 import { fuzzyFilter } from "@avadisabelle/ava-pi-tui";
+import chalk from "chalk";
 import type { ModelRegistry } from "../core/model-registry.js";
 
 /**
@@ -25,6 +26,11 @@ function formatTokenCount(count: number): string {
  * List available models, optionally filtered by search pattern
  */
 export async function listModels(modelRegistry: ModelRegistry, searchPattern?: string): Promise<void> {
+	const loadError = modelRegistry.getError();
+	if (loadError) {
+		console.error(chalk.yellow(`Warning: errors loading models.json:\n${loadError}`));
+	}
+
 	const models = modelRegistry.getAvailable();
 
 	if (models.length === 0) {

@@ -6,7 +6,7 @@
 			"*": ["./*"],
 			"@avadisabelle/ava-pi-ai": ["./packages/ai/src/index.ts"],
 			"@avadisabelle/ava-pi-ai/oauth": ["./packages/ai/src/oauth.ts"],
-			"@avadisabelle/ava-pi-ai/*": ["./packages/ai/src/*"],
+			"@avadisabelle/ava-pi-ai/*": ["./packages/ai/src/*.ts", "./packages/ai/src/providers/*.ts"],
 			"@avadisabelle/ava-pi-ai/dist/*": ["./packages/ai/src/*"],
 			"@avadisabelle/ava-pi-agent-core": ["./packages/agent/src/index.ts"],
 			"@avadisabelle/ava-pi-agent-core/*": ["./packages/agent/src/*"],
@@ -25,7 +25,13 @@
 			"@avadisabelle/ava-pi-agent-old": ["./packages/agent-old/src/index.ts"],
 			"@avadisabelle/ava-pi-agent-old/*": ["./packages/agent-old/src/*"],
 			"@avadisabelle/ava-pi-trading": ["./packages/trading/src/index.ts"],
-			"@avadisabelle/ava-pi-trading/*": ["./packages/trading/src/*"]
+			"@avadisabelle/ava-pi-trading/*": ["./packages/trading/src/*"],
+			"@avadisabelle/ava-council": ["./packages/council/src/index.ts"],
+			"@avadisabelle/ava-council/*": ["./packages/council/src/*"],
+			"@avadisabelle/ava-diary": ["./packages/diary/src/index.ts"],
+			"@avadisabelle/ava-diary/*": ["./packages/diary/src/*"],
+			"@avadisabelle/ava-presence": ["./packages/presence/src/index.ts"],
+			"@avadisabelle/ava-presence/*": ["./packages/presence/src/*"]
 		}
 	},
 	"include": ["packages/*/src/**/*", "packages/*/test/**/*", "packages/coding-agent/examples/**/*"],
