@@ -48,7 +48,7 @@
 	"version": "0.0.3",
 	"dependencies": {
 		"@mariozechner/jiti": "^2.6.5",
-		"@avadisabelle/ava-pi-coding-agent": "^0.65.2",
+		"@avadisabelle/ava-pi-coding-agent": "^0.65.3",
 		"get-east-asian-width": "^1.4.0"
 	},
 	"overrides": {
