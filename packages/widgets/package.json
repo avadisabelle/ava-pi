@@ -24,7 +24,7 @@
 		"@avadisabelle/ava-pi-ai": "^0.65.2",
 		"@avadisabelle/ava-pi-coding-agent": "^0.65.2",
 		"@avadisabelle/ava-pi-tui": "^0.65.2",
-		"mia-co": "^0.7.5"
+		"mia-co": "^0.9.2"
 	},
 	"devDependencies": {
 		"typescript": "^5.7.0"
